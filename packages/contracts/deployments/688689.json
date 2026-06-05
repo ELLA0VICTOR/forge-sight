@@ -1,0 +1,11 @@
+{
+  "network": "atlantic-testnet",
+  "chainId": 688689,
+  "note": "Deterministic fixture labels. Replace with real deployed addresses after forge script deployment.",
+  "contracts": {
+    "USDC": "0xE0BE08c77f415F577A1B3A9aD7a1Df1479564ec8",
+    "WPHRS": "0x838800b758277CC111B2d48Ab01e5E164f8E9471",
+    "MOON": "0x00000000000000000000000000000000F0e51002",
+    "SimpleRouter": "0x00000000000000000000000000000000F0e51001"
+  }
+}

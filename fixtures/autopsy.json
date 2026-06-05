@@ -1,0 +1,216 @@
+{
+  "id": "autopsy",
+  "title": "Failure autopsy",
+  "subtitle": "Why the swap reverted",
+  "kind": "diagnose",
+  "network": {
+    "name": "atlantic-testnet",
+    "chainId": 688689,
+    "rpcUrl": "https://atlantic.dplabs-internal.com",
+    "wsUrl": "wss://atlantic.dplabs-internal.com",
+    "nativeCurrency": "PHRS",
+    "explorerUrl": "https://atlantic.pharosscan.xyz/",
+    "explorerApiUrl": "https://api.socialscan.io/pharos-atlantic-testnet",
+    "explorerVerifyApiUrl": "https://api.socialscan.io/pharos-atlantic-testnet/v1/explorer/command_api/contract",
+    "forkBlock": 23559136
+  },
+  "block": 23559136,
+  "transaction": {
+    "from": "0xa1b2000000000000000000000000000000000001",
+    "to": "0x00000000000000000000000000000000f0e51001",
+    "value": "0",
+    "data": "0xfe029156000000000000000000000000e0be08c77f415f577a1b3a9ad7a1df1479564ec8000000000000000000000000838800b758277cc111b2d48ab01e5e164f8e94710000000000000000000000000000000000000000000000000000000005f5e10000000000000000000000000000000000000000000000000564d702d38f5e0000"
+  },
+  "txHash": "0xfeed00000000000000000000000000000000000000000000000000000000cafe",
+  "diagnosis": {
+    "id": "diagnose-autopsy",
+    "txHash": "0xfeed00000000000000000000000000000000000000000000000000000000cafe",
+    "network": {
+      "name": "atlantic-testnet",
+      "chainId": 688689,
+      "rpcUrl": "https://atlantic.dplabs-internal.com",
+      "wsUrl": "wss://atlantic.dplabs-internal.com",
+      "nativeCurrency": "PHRS",
+      "explorerUrl": "https://atlantic.pharosscan.xyz/",
+      "explorerApiUrl": "https://api.socialscan.io/pharos-atlantic-testnet",
+      "explorerVerifyApiUrl": "https://api.socialscan.io/pharos-atlantic-testnet/v1/explorer/command_api/contract",
+      "forkBlock": 23559136
+    },
+    "callTree": {
+      "type": "CALL",
+      "reverted": true,
+      "children": [
+        {
+          "type": "CALL",
+          "reverted": true,
+          "children": [
+            {
+              "type": "CALL",
+              "reverted": false,
+              "children": [],
+              "id": "usdc-transfer",
+              "depth": 2,
+              "contractName": "USDC",
+              "functionName": "transferFrom",
+              "to": "0xE0BE08c77f415F577A1B3A9aD7a1Df1479564ec8",
+              "gasUsed": "30488"
+            },
+            {
+              "type": "CALL",
+              "reverted": false,
+              "children": [],
+              "id": "wphrs-quote",
+              "depth": 2,
+              "contractName": "WPHRS",
+              "functionName": "quote",
+              "to": "0x838800b758277CC111B2d48Ab01e5E164f8E9471",
+              "gasUsed": "11102"
+            }
+          ],
+          "id": "router-swap",
+          "depth": 1,
+          "contractName": "SimpleRouter",
+          "functionName": "swap",
+          "to": "0x00000000000000000000000000000000f0e51001",
+          "gasUsed": "93018",
+          "errorName": "InsufficientOutputAmount",
+          "errorArgs": {
+            "minOut": "99.6 WPHRS",
+            "actualOut": "99.5 WPHRS"
+          }
+        }
+      ],
+      "id": "root",
+      "depth": 0,
+      "contractName": "AgentWallet",
+      "functionName": "execute",
+      "to": "0xa1b2000000000000000000000000000000000001",
+      "gasUsed": "112904"
+    },
+    "revertingFrame": "SimpleRouter.swap",
+    "errorName": "InsufficientOutputAmount",
+    "errorArgs": {
+      "minOut": "99.6 WPHRS",
+      "actualOut": "99.5 WPHRS"
+    },
+    "rootCause": "The route returned 99.5 WPHRS, but the transaction required at least 99.6 WPHRS. The swap reverted because the slippage guard was tighter than the simulated output.",
+    "fix": {
+      "summary": "Set minOut to 98.0 WPHRS or lower, or widen slippage before retrying.",
+      "suggestedTx": {
+        "to": "0x00000000000000000000000000000000f0e51001",
+        "data": "0xfe029156000000000000000000000000e0be08c77f415f577a1b3a9ad7a1df1479564ec8000000000000000000000000838800b758277cc111b2d48ab01e5e164f8e94710000000000000000000000000000000000000000000000000000000005f5e100000000000000000000000000000000000000000000000005663a484bece80000",
+        "value": "0",
+        "note": "Corrected calldata with minOut set safely below the simulated 99.5 WPHRS output."
+      }
+    },
+    "telemetry": [
+      {
+        "t": 0,
+        "phase": "INTERCEPT",
+        "level": "info",
+        "message": "failed transaction hash received"
+      },
+      {
+        "t": 420,
+        "phase": "TRACING",
+        "level": "info",
+        "message": "loading receipt and fork block context"
+      },
+      {
+        "t": 980,
+        "phase": "TRACING",
+        "level": "info",
+        "message": "debug trace acquired from fork"
+      },
+      {
+        "t": 1650,
+        "phase": "TRACE",
+        "level": "info",
+        "message": "call tree decoded"
+      },
+      {
+        "t": 2360,
+        "phase": "REVERT",
+        "level": "error",
+        "message": "reverting frame located: SimpleRouter.swap"
+      },
+      {
+        "t": 3100,
+        "phase": "DIAGNOSIS",
+        "level": "ok",
+        "message": "custom error decoded and fix prepared"
+      }
+    ]
+  },
+  "console": [
+    {
+      "id": "autopsy-user",
+      "role": "user",
+      "kind": "text",
+      "atPhase": "INTERCEPT",
+      "content": "My swap failed earlier. Tx 0xfeed00000000000000000000000000000000000000000000000000000000cafe - what happened?"
+    },
+    {
+      "id": "autopsy-tracing",
+      "role": "agent",
+      "kind": "text",
+      "atPhase": "TRACING",
+      "content": "Pulling the execution trace and locating the reverting frame."
+    },
+    {
+      "id": "autopsy-diagnosis",
+      "role": "agent",
+      "kind": "decision",
+      "atPhase": "DIAGNOSIS",
+      "decision": "n/a",
+      "content": "It reverted in SimpleRouter.swap with InsufficientOutputAmount. The route returned 99.5 WPHRS but you required at least 99.6 (price moved ~0.1%). Here is a corrected transaction with minOut set to 98.0."
+    }
+  ],
+  "telemetry": [
+    {
+      "t": 0,
+      "phase": "INTERCEPT",
+      "level": "info",
+      "message": "failed transaction hash received"
+    },
+    {
+      "t": 420,
+      "phase": "TRACING",
+      "level": "info",
+      "message": "loading receipt and fork block context"
+    },
+    {
+      "t": 980,
+      "phase": "TRACING",
+      "level": "info",
+      "message": "debug trace acquired from fork"
+    },
+    {
+      "t": 1650,
+      "phase": "TRACE",
+      "level": "info",
+      "message": "call tree decoded"
+    },
+    {
+      "t": 2360,
+      "phase": "REVERT",
+      "level": "error",
+      "message": "reverting frame located: SimpleRouter.swap"
+    },
+    {
+      "t": 3100,
+      "phase": "DIAGNOSIS",
+      "level": "ok",
+      "message": "custom error decoded and fix prepared"
+    }
+  ],
+  "phaseOrder": [
+    "IDLE",
+    "INTERCEPT",
+    "TRACING",
+    "TRACE",
+    "REVERT",
+    "DIAGNOSIS",
+    "DONE"
+  ]
+}

@@ -1,0 +1,409 @@
+{
+  "id": "honeypot",
+  "title": "Honeypot detected",
+  "subtitle": "$MOON cannot be sold",
+  "kind": "simulate",
+  "network": {
+    "name": "atlantic-testnet",
+    "chainId": 688689,
+    "rpcUrl": "https://atlantic.dplabs-internal.com",
+    "wsUrl": "wss://atlantic.dplabs-internal.com",
+    "nativeCurrency": "PHRS",
+    "explorerUrl": "https://atlantic.pharosscan.xyz/",
+    "explorerApiUrl": "https://api.socialscan.io/pharos-atlantic-testnet",
+    "explorerVerifyApiUrl": "https://api.socialscan.io/pharos-atlantic-testnet/v1/explorer/command_api/contract",
+    "forkBlock": 23559136
+  },
+  "block": 23559136,
+  "transaction": {
+    "from": "0xa1b2000000000000000000000000000000000001",
+    "to": "0x00000000000000000000000000000000f0e51001",
+    "value": "1000000000000000000",
+    "data": "0xfe029156000000000000000000000000838800b758277cc111b2d48ab01e5e164f8e947100000000000000000000000000000000000000000000000000000000f0e510020000000000000000000000000000000000000000000000000de0b6b3a7640000000000000000000000000000000000000000000000000030ca024f987b900000"
+  },
+  "report": {
+    "id": "sim-honeypot",
+    "tx": {
+      "from": "0xa1b2000000000000000000000000000000000001",
+      "to": "0x00000000000000000000000000000000f0e51001",
+      "value": "1000000000000000000",
+      "data": "0xfe029156000000000000000000000000838800b758277cc111b2d48ab01e5e164f8e947100000000000000000000000000000000000000000000000000000000f0e510020000000000000000000000000000000000000000000000000de0b6b3a7640000000000000000000000000000000000000000000000000030ca024f987b900000"
+    },
+    "network": {
+      "name": "atlantic-testnet",
+      "chainId": 688689,
+      "rpcUrl": "https://atlantic.dplabs-internal.com",
+      "wsUrl": "wss://atlantic.dplabs-internal.com",
+      "nativeCurrency": "PHRS",
+      "explorerUrl": "https://atlantic.pharosscan.xyz/",
+      "explorerApiUrl": "https://api.socialscan.io/pharos-atlantic-testnet",
+      "explorerVerifyApiUrl": "https://api.socialscan.io/pharos-atlantic-testnet/v1/explorer/command_api/contract",
+      "forkBlock": 23559136
+    },
+    "forkBlock": 23559136,
+    "success": true,
+    "decoded": {
+      "to": "0x00000000000000000000000000000000f0e51001",
+      "contractName": "SimpleRouter",
+      "functionName": "swap",
+      "verified": true,
+      "humanReadable": "swap 1 WPHRS to UnknownContract with minOut 900 UnknownContract",
+      "args": {
+        "tokenIn": "0x838800b758277CC111B2d48Ab01e5E164f8E9471",
+        "tokenOut": "0x00000000000000000000000000000000F0E51002",
+        "amountIn": "1000000000000000000",
+        "minOut": "900000000000000000000"
+      }
+    },
+    "gasUsed": "143012",
+    "balanceDeltas": [
+      {
+        "token": "native",
+        "symbol": "PHRS",
+        "decimals": 18,
+        "before": "10.0",
+        "after": "9.0",
+        "delta": "-1.0"
+      },
+      {
+        "token": "0x00000000000000000000000000000000f0e51002",
+        "symbol": "MOON",
+        "decimals": 18,
+        "before": "0.0",
+        "after": "980.0",
+        "delta": "+980.0"
+      }
+    ],
+    "stateChanges": [
+      {
+        "contract": "0x00000000000000000000000000000000f0e51002",
+        "contractName": "MoonToken",
+        "variable": "trapped[0xa1b200...]",
+        "slot": "0x0000000000000000000000000000000000000000000000000000000000000007",
+        "humanBefore": "false",
+        "humanAfter": "true",
+        "isCritical": true
+      }
+    ],
+    "events": [
+      {
+        "address": "0x00000000000000000000000000000000f0e51002",
+        "contractName": "MoonToken",
+        "eventName": "Transfer",
+        "detail": "MoonToken transferred 980 MOON to the agent."
+      }
+    ],
+    "findings": [
+      {
+        "id": "honeypot-round-trip",
+        "severity": "CRITICAL",
+        "title": "Honeypot detected",
+        "detail": "The token can be bought, but sell attempts from normal wallets revert while the owner can exit.",
+        "evidence": [
+          "Buy simulation succeeded.",
+          "Sell as agent reverted with SellBlocked.",
+          "Sell as owner succeeded."
+        ]
+      },
+      {
+        "id": "critical-state-write",
+        "severity": "HIGH",
+        "title": "Suspicious critical state write",
+        "detail": "The transaction writes to a sensitive state variable that changes the user's exit conditions.",
+        "evidence": [
+          "trapped[0xa1b200...]: false -> true"
+        ]
+      },
+      {
+        "id": "value-disproportion",
+        "severity": "MEDIUM",
+        "title": "Large value exposure",
+        "detail": "The proposed transaction puts a large share of the wallet's tracked value at risk.",
+        "evidence": [
+          "value at risk: 100%"
+        ]
+      },
+      {
+        "id": "new-contract",
+        "severity": "MEDIUM",
+        "title": "Recently deployed contract",
+        "detail": "The contract is inside the new-contract window. Fresh contracts deserve extra review before signing.",
+        "evidence": [
+          "age: 134 blocks",
+          "window: 5000 blocks"
+        ]
+      }
+    ],
+    "callTree": {
+      "type": "CALL",
+      "reverted": false,
+      "children": [
+        {
+          "type": "CALL",
+          "reverted": false,
+          "children": [],
+          "id": "moon-transfer",
+          "depth": 1,
+          "contractName": "MoonToken",
+          "functionName": "transfer",
+          "to": "0x00000000000000000000000000000000f0e51002",
+          "gasUsed": "52144"
+        },
+        {
+          "type": "CALL",
+          "reverted": true,
+          "children": [],
+          "id": "moon-sell-test",
+          "depth": 1,
+          "contractName": "MoonToken",
+          "functionName": "transfer",
+          "to": "0x00000000000000000000000000000000f0e51002",
+          "gasUsed": "38410",
+          "errorName": "SellBlocked",
+          "errorArgs": {
+            "seller": "0xa1b2000000000000000000000000000000000001"
+          }
+        }
+      ],
+      "id": "root",
+      "depth": 0,
+      "contractName": "SimpleRouter",
+      "functionName": "swap",
+      "to": "0x00000000000000000000000000000000f0e51001",
+      "gasUsed": "143012"
+    },
+    "verdict": {
+      "decision": "DO_NOT_SIGN",
+      "score": 96,
+      "band": "CRITICAL",
+      "headline": "Honeypot detected",
+      "paragraph": "$MOON can be bought, but simulated sells from normal wallets revert with SellBlocked while the owner can sell freely. Buying it would trap the agent's funds and also flips a trapped wallet flag. Do not sign this transaction."
+    },
+    "telemetry": [
+      {
+        "t": 0,
+        "phase": "INTERCEPT",
+        "level": "info",
+        "message": "transaction intercepted before signing"
+      },
+      {
+        "t": 420,
+        "phase": "SIMULATING",
+        "level": "info",
+        "message": "forking Pharos Atlantic state at pinned block 23559136"
+      },
+      {
+        "t": 900,
+        "phase": "SIMULATING",
+        "level": "info",
+        "message": "decoded calldata and resolved local ABI labels"
+      },
+      {
+        "t": 1320,
+        "phase": "SIMULATING",
+        "level": "ok",
+        "message": "simulate buy - ok"
+      },
+      {
+        "t": 1710,
+        "phase": "SIMULATING",
+        "level": "error",
+        "message": "simulate sell as agent - REVERTED SellBlocked"
+      },
+      {
+        "t": 2020,
+        "phase": "SIMULATING",
+        "level": "error",
+        "message": "simulate sell as fresh wallet - REVERTED SellBlocked"
+      },
+      {
+        "t": 2320,
+        "phase": "SIMULATING",
+        "level": "ok",
+        "message": "simulate sell as token owner - ok"
+      },
+      {
+        "t": 2580,
+        "phase": "SIMULATING",
+        "level": "warn",
+        "message": "asymmetry confirmed: owner-only exit path"
+      },
+      {
+        "t": 2950,
+        "phase": "RESULT",
+        "level": "info",
+        "message": "risk rules aggregated into deterministic verdict"
+      },
+      {
+        "t": 3700,
+        "phase": "LEDGER",
+        "level": "info",
+        "message": "balance delta ledger ready"
+      },
+      {
+        "t": 4400,
+        "phase": "STATE",
+        "level": "warn",
+        "message": "critical trapped flag changed"
+      },
+      {
+        "t": 5200,
+        "phase": "FINDINGS",
+        "level": "error",
+        "message": "critical findings surfaced"
+      },
+      {
+        "t": 6100,
+        "phase": "VERDICT",
+        "level": "error",
+        "message": "verdict DO_NOT_SIGN emitted"
+      }
+    ],
+    "roundTrip": {
+      "tested": true,
+      "token": "0x00000000000000000000000000000000f0e51002",
+      "tokenSymbol": "MOON",
+      "buy": "ok",
+      "sellAsAgent": "reverted",
+      "sellAsFresh": "reverted",
+      "sellAsOwner": "ok",
+      "errorName": "SellBlocked",
+      "asymmetric": true
+    }
+  },
+  "console": [
+    {
+      "id": "honeypot-user",
+      "role": "user",
+      "kind": "text",
+      "atPhase": "INTERCEPT",
+      "content": "Ape 1 PHRS into $MOON, it's pumping."
+    },
+    {
+      "id": "honeypot-thinking",
+      "role": "agent",
+      "kind": "thinking",
+      "atPhase": "INTERCEPT",
+      "content": "Building a buy for MOON through SimpleRouter..."
+    },
+    {
+      "id": "honeypot-tx",
+      "role": "agent",
+      "kind": "proposed-tx",
+      "atPhase": "INTERCEPT",
+      "content": "tx proposed",
+      "tx": {
+        "to": "0x00000000000000000000000000000000f0e51001",
+        "contractName": "SimpleRouter",
+        "functionName": "swap",
+        "valueLabel": "1 WPHRS in"
+      }
+    },
+    {
+      "id": "honeypot-run",
+      "role": "agent",
+      "kind": "text",
+      "atPhase": "SIMULATING",
+      "content": "Running Foresight pre-flight, including a round-trip sell test."
+    },
+    {
+      "id": "honeypot-decision",
+      "role": "agent",
+      "kind": "decision",
+      "atPhase": "VERDICT",
+      "decision": "refused",
+      "content": "Foresight verdict: DO NOT SIGN (risk 96). $MOON is a honeypot - the sell reverts with SellBlocked from any non-owner address, while the owner can sell freely. Buying it would trap your funds. I will not sign this. Recommend avoiding $MOON."
+    }
+  ],
+  "telemetry": [
+    {
+      "t": 0,
+      "phase": "INTERCEPT",
+      "level": "info",
+      "message": "transaction intercepted before signing"
+    },
+    {
+      "t": 420,
+      "phase": "SIMULATING",
+      "level": "info",
+      "message": "forking Pharos Atlantic state at pinned block 23559136"
+    },
+    {
+      "t": 900,
+      "phase": "SIMULATING",
+      "level": "info",
+      "message": "decoded calldata and resolved local ABI labels"
+    },
+    {
+      "t": 1320,
+      "phase": "SIMULATING",
+      "level": "ok",
+      "message": "simulate buy - ok"
+    },
+    {
+      "t": 1710,
+      "phase": "SIMULATING",
+      "level": "error",
+      "message": "simulate sell as agent - REVERTED SellBlocked"
+    },
+    {
+      "t": 2020,
+      "phase": "SIMULATING",
+      "level": "error",
+      "message": "simulate sell as fresh wallet - REVERTED SellBlocked"
+    },
+    {
+      "t": 2320,
+      "phase": "SIMULATING",
+      "level": "ok",
+      "message": "simulate sell as token owner - ok"
+    },
+    {
+      "t": 2580,
+      "phase": "SIMULATING",
+      "level": "warn",
+      "message": "asymmetry confirmed: owner-only exit path"
+    },
+    {
+      "t": 2950,
+      "phase": "RESULT",
+      "level": "info",
+      "message": "risk rules aggregated into deterministic verdict"
+    },
+    {
+      "t": 3700,
+      "phase": "LEDGER",
+      "level": "info",
+      "message": "balance delta ledger ready"
+    },
+    {
+      "t": 4400,
+      "phase": "STATE",
+      "level": "warn",
+      "message": "critical trapped flag changed"
+    },
+    {
+      "t": 5200,
+      "phase": "FINDINGS",
+      "level": "error",
+      "message": "critical findings surfaced"
+    },
+    {
+      "t": 6100,
+      "phase": "VERDICT",
+      "level": "error",
+      "message": "verdict DO_NOT_SIGN emitted"
+    }
+  ],
+  "phaseOrder": [
+    "IDLE",
+    "INTERCEPT",
+    "SIMULATING",
+    "RESULT",
+    "LEDGER",
+    "STATE",
+    "FINDINGS",
+    "VERDICT",
+    "DONE"
+  ]
+}

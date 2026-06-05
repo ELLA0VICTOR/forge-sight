@@ -1,0 +1,25 @@
+{
+  "contractName": "SimpleRouter",
+  "abi": [
+    {
+      "type": "function",
+      "name": "swap",
+      "stateMutability": "payable",
+      "inputs": [
+        { "name": "tokenIn", "type": "address" },
+        { "name": "tokenOut", "type": "address" },
+        { "name": "amountIn", "type": "uint256" },
+        { "name": "minOut", "type": "uint256" }
+      ],
+      "outputs": [{ "name": "amountOut", "type": "uint256" }]
+    },
+    {
+      "type": "error",
+      "name": "InsufficientOutputAmount",
+      "inputs": [
+        { "name": "minOut", "type": "uint256" },
+        { "name": "actualOut", "type": "uint256" }
+      ]
+    }
+  ]
+}

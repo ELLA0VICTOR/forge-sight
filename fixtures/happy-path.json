@@ -1,0 +1,354 @@
+{
+  "id": "happy-path",
+  "title": "Standard swap",
+  "subtitle": "USDC to WPHRS via SimpleRouter",
+  "kind": "simulate",
+  "network": {
+    "name": "atlantic-testnet",
+    "chainId": 688689,
+    "rpcUrl": "https://atlantic.dplabs-internal.com",
+    "wsUrl": "wss://atlantic.dplabs-internal.com",
+    "nativeCurrency": "PHRS",
+    "explorerUrl": "https://atlantic.pharosscan.xyz/",
+    "explorerApiUrl": "https://api.socialscan.io/pharos-atlantic-testnet",
+    "explorerVerifyApiUrl": "https://api.socialscan.io/pharos-atlantic-testnet/v1/explorer/command_api/contract",
+    "forkBlock": 23559136
+  },
+  "block": 23559136,
+  "transaction": {
+    "from": "0xa1b2000000000000000000000000000000000001",
+    "to": "0x00000000000000000000000000000000f0e51001",
+    "value": "0",
+    "data": "0xfe029156000000000000000000000000e0be08c77f415f577a1b3a9ad7a1df1479564ec8000000000000000000000000838800b758277cc111b2d48ab01e5e164f8e94710000000000000000000000000000000000000000000000000000000005f5e10000000000000000000000000000000000000000000000000564d702d38f5e0000"
+  },
+  "report": {
+    "id": "sim-happy-path",
+    "tx": {
+      "from": "0xa1b2000000000000000000000000000000000001",
+      "to": "0x00000000000000000000000000000000f0e51001",
+      "value": "0",
+      "data": "0xfe029156000000000000000000000000e0be08c77f415f577a1b3a9ad7a1df1479564ec8000000000000000000000000838800b758277cc111b2d48ab01e5e164f8e94710000000000000000000000000000000000000000000000000000000005f5e10000000000000000000000000000000000000000000000000564d702d38f5e0000"
+    },
+    "network": {
+      "name": "atlantic-testnet",
+      "chainId": 688689,
+      "rpcUrl": "https://atlantic.dplabs-internal.com",
+      "wsUrl": "wss://atlantic.dplabs-internal.com",
+      "nativeCurrency": "PHRS",
+      "explorerUrl": "https://atlantic.pharosscan.xyz/",
+      "explorerApiUrl": "https://api.socialscan.io/pharos-atlantic-testnet",
+      "explorerVerifyApiUrl": "https://api.socialscan.io/pharos-atlantic-testnet/v1/explorer/command_api/contract",
+      "forkBlock": 23559136
+    },
+    "forkBlock": 23559136,
+    "success": true,
+    "decoded": {
+      "to": "0x00000000000000000000000000000000f0e51001",
+      "contractName": "SimpleRouter",
+      "functionName": "swap",
+      "verified": true,
+      "humanReadable": "swap 100 USDC to WPHRS with minOut 99.5 WPHRS",
+      "args": {
+        "tokenIn": "0xE0BE08c77f415F577A1B3A9aD7a1Df1479564ec8",
+        "tokenOut": "0x838800b758277CC111B2d48Ab01e5E164f8E9471",
+        "amountIn": "100000000",
+        "minOut": "99500000000000000000"
+      }
+    },
+    "gasUsed": "87122",
+    "balanceDeltas": [
+      {
+        "token": "0xE0BE08c77f415F577A1B3A9aD7a1Df1479564ec8",
+        "symbol": "USDC",
+        "decimals": 6,
+        "before": "1000.0",
+        "after": "900.0",
+        "delta": "-100.0"
+      },
+      {
+        "token": "0x838800b758277CC111B2d48Ab01e5E164f8E9471",
+        "symbol": "WPHRS",
+        "decimals": 18,
+        "before": "0.0",
+        "after": "99.5",
+        "delta": "+99.5"
+      },
+      {
+        "token": "native",
+        "symbol": "PHRS",
+        "decimals": 18,
+        "before": "10.0",
+        "after": "9.9991",
+        "delta": "-0.0009"
+      }
+    ],
+    "stateChanges": [],
+    "events": [
+      {
+        "address": "0xE0BE08c77f415F577A1B3A9aD7a1Df1479564ec8",
+        "contractName": "USDC",
+        "eventName": "Transfer",
+        "detail": "USDC transferred 100 USDC from the agent to SimpleRouter."
+      },
+      {
+        "address": "0x838800b758277CC111B2d48Ab01e5E164f8E9471",
+        "contractName": "WPHRS",
+        "eventName": "Transfer",
+        "detail": "WPHRS transferred 99.5 WPHRS from SimpleRouter to the agent."
+      }
+    ],
+    "findings": [
+      {
+        "id": "scoped-allowance",
+        "severity": "INFO",
+        "title": "Allowance scoped to exact amount",
+        "detail": "The router only receives approval for the amount required by this swap.",
+        "evidence": [
+          "amount: 100 USDC",
+          "spender: SimpleRouter"
+        ]
+      },
+      {
+        "id": "verified-router",
+        "severity": "INFO",
+        "title": "Router is verified",
+        "detail": "SimpleRouter matched the local ABI and verified contract label set.",
+        "evidence": [
+          "router: 0x00000000000000000000000000000000f0e51001"
+        ]
+      }
+    ],
+    "callTree": {
+      "type": "CALL",
+      "reverted": false,
+      "children": [
+        {
+          "type": "CALL",
+          "reverted": false,
+          "children": [],
+          "id": "usdc-transfer",
+          "depth": 1,
+          "contractName": "USDC",
+          "functionName": "transferFrom",
+          "to": "0xE0BE08c77f415F577A1B3A9aD7a1Df1479564ec8",
+          "gasUsed": "31102"
+        },
+        {
+          "type": "CALL",
+          "reverted": false,
+          "children": [],
+          "id": "wphrs-transfer",
+          "depth": 1,
+          "contractName": "WPHRS",
+          "functionName": "transfer",
+          "to": "0x838800b758277CC111B2d48Ab01e5E164f8E9471",
+          "gasUsed": "29612"
+        }
+      ],
+      "id": "root",
+      "depth": 0,
+      "contractName": "SimpleRouter",
+      "functionName": "swap",
+      "to": "0x00000000000000000000000000000000f0e51001",
+      "gasUsed": "87122"
+    },
+    "verdict": {
+      "decision": "SIGN",
+      "score": 12,
+      "band": "SAFE",
+      "headline": "Standard swap - safe to sign",
+      "paragraph": "This is a standard swap on SimpleRouter, a verified contract. You will spend -100.0 USDC and receive 99.5 WPHRS, with the token allowance scoped to the exact amount. No dangerous state changes were detected. Safe to sign."
+    },
+    "telemetry": [
+      {
+        "t": 0,
+        "phase": "INTERCEPT",
+        "level": "info",
+        "message": "transaction intercepted before signing"
+      },
+      {
+        "t": 420,
+        "phase": "SIMULATING",
+        "level": "info",
+        "message": "forking Pharos Atlantic state at pinned block 23559136"
+      },
+      {
+        "t": 900,
+        "phase": "SIMULATING",
+        "level": "info",
+        "message": "decoded calldata and resolved local ABI labels"
+      },
+      {
+        "t": 1280,
+        "phase": "SIMULATING",
+        "level": "ok",
+        "message": "router call completed successfully on fork"
+      },
+      {
+        "t": 1680,
+        "phase": "SIMULATING",
+        "level": "ok",
+        "message": "transfer events decoded: USDC out, WPHRS in"
+      },
+      {
+        "t": 2100,
+        "phase": "SIMULATING",
+        "level": "ok",
+        "message": "no critical storage writes detected"
+      },
+      {
+        "t": 2950,
+        "phase": "RESULT",
+        "level": "info",
+        "message": "risk rules aggregated into deterministic verdict"
+      },
+      {
+        "t": 3700,
+        "phase": "LEDGER",
+        "level": "info",
+        "message": "balance delta ledger ready"
+      },
+      {
+        "t": 4400,
+        "phase": "STATE",
+        "level": "ok",
+        "message": "state diff clean"
+      },
+      {
+        "t": 5200,
+        "phase": "FINDINGS",
+        "level": "ok",
+        "message": "informational findings only"
+      },
+      {
+        "t": 6100,
+        "phase": "VERDICT",
+        "level": "ok",
+        "message": "verdict SIGN emitted"
+      }
+    ]
+  },
+  "console": [
+    {
+      "id": "happy-user",
+      "role": "user",
+      "kind": "text",
+      "atPhase": "INTERCEPT",
+      "content": "Swap 100 USDC for WPHRS using the SimpleRouter, max 0.5% slippage."
+    },
+    {
+      "id": "happy-thinking",
+      "role": "agent",
+      "kind": "thinking",
+      "atPhase": "INTERCEPT",
+      "content": "Planning route and building the swap transaction..."
+    },
+    {
+      "id": "happy-tx",
+      "role": "agent",
+      "kind": "proposed-tx",
+      "atPhase": "INTERCEPT",
+      "content": "tx proposed",
+      "tx": {
+        "to": "0x00000000000000000000000000000000f0e51001",
+        "contractName": "SimpleRouter",
+        "functionName": "swap",
+        "valueLabel": "0 PHRS"
+      }
+    },
+    {
+      "id": "happy-run",
+      "role": "agent",
+      "kind": "text",
+      "atPhase": "SIMULATING",
+      "content": "Running Foresight pre-flight before signing."
+    },
+    {
+      "id": "happy-decision",
+      "role": "agent",
+      "kind": "decision",
+      "atPhase": "VERDICT",
+      "decision": "signed",
+      "content": "Foresight verdict: SIGN (risk 12). Net result minus 100 USDC, plus 99.5 WPHRS. Allowance is scoped to the exact amount. Signing now."
+    }
+  ],
+  "telemetry": [
+    {
+      "t": 0,
+      "phase": "INTERCEPT",
+      "level": "info",
+      "message": "transaction intercepted before signing"
+    },
+    {
+      "t": 420,
+      "phase": "SIMULATING",
+      "level": "info",
+      "message": "forking Pharos Atlantic state at pinned block 23559136"
+    },
+    {
+      "t": 900,
+      "phase": "SIMULATING",
+      "level": "info",
+      "message": "decoded calldata and resolved local ABI labels"
+    },
+    {
+      "t": 1280,
+      "phase": "SIMULATING",
+      "level": "ok",
+      "message": "router call completed successfully on fork"
+    },
+    {
+      "t": 1680,
+      "phase": "SIMULATING",
+      "level": "ok",
+      "message": "transfer events decoded: USDC out, WPHRS in"
+    },
+    {
+      "t": 2100,
+      "phase": "SIMULATING",
+      "level": "ok",
+      "message": "no critical storage writes detected"
+    },
+    {
+      "t": 2950,
+      "phase": "RESULT",
+      "level": "info",
+      "message": "risk rules aggregated into deterministic verdict"
+    },
+    {
+      "t": 3700,
+      "phase": "LEDGER",
+      "level": "info",
+      "message": "balance delta ledger ready"
+    },
+    {
+      "t": 4400,
+      "phase": "STATE",
+      "level": "ok",
+      "message": "state diff clean"
+    },
+    {
+      "t": 5200,
+      "phase": "FINDINGS",
+      "level": "ok",
+      "message": "informational findings only"
+    },
+    {
+      "t": 6100,
+      "phase": "VERDICT",
+      "level": "ok",
+      "message": "verdict SIGN emitted"
+    }
+  ],
+  "phaseOrder": [
+    "IDLE",
+    "INTERCEPT",
+    "SIMULATING",
+    "RESULT",
+    "LEDGER",
+    "STATE",
+    "FINDINGS",
+    "VERDICT",
+    "DONE"
+  ]
+}

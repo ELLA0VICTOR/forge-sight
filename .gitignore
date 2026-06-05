@@ -1,0 +1,50 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+# Environment / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.keystore
+
+# Build and framework output
+.next
+out
+coverage
+.turbo
+.vercel
+apps/**/.next
+packages/**/dist
+
+# Local dev server logs
+*-dev.out.log
+*-dev.err.log
+
+# Prompt / planning docs, not product submission files
+CODEX_BRIEF.md
+DESIGN.md
+frontend-improvement.md
+docs/README.md
