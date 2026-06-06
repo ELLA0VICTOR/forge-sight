@@ -18,8 +18,16 @@ import { callNode } from "../decoder/calltree.js";
 import { detectHoneypot } from "../honeypot/detect.js";
 import { runRiskRules } from "../risk/engine.js";
 import { buildVerdict } from "../explain/verdict.js";
+import { simulateLive } from "./live.js";
 
 export type TelemetrySink = (event: TelemetryEvent) => void;
+export type SimulateMode = "live" | "fixture";
+
+export interface SimulateOptions {
+  onTelemetry?: TelemetrySink;
+  mode?: SimulateMode;
+  allowFixtureFallback?: boolean;
+}
 
 function emitAll(sink: TelemetrySink | undefined, events: TelemetryEvent[]): void {
   for (const event of events) sink?.(event);
@@ -299,9 +307,9 @@ export function unlimitedApprovalTx(): TxRequest {
     }) as Hex,
   };
 }
-export async function simulate(
+export async function simulateFixture(
   request: TxRequest,
-  options: { onTelemetry?: TelemetrySink } = {},
+  options: SimulateOptions = {},
 ): Promise<SimReport> {
   const decoded = decodeCalldata({ to: request.to, data: request.data });
   const isHoneypot = decoded.args.tokenOut === demoAddresses.moon || request.value === "1000000000000000000";
@@ -361,4 +369,27 @@ export async function simulate(
   }
 
   return report;
+}
+
+export async function simulate(
+  request: TxRequest,
+  options: SimulateOptions = {},
+): Promise<SimReport> {
+  const configuredMode = process.env.FORESIGHT_SIM_MODE;
+  const mode: SimulateMode =
+    options.mode ?? (configuredMode === "fixture" ? "fixture" : "live");
+
+  if (mode === "fixture") {
+    return simulateFixture(request, options);
+  }
+
+  try {
+    return await simulateLive(request, options);
+  } catch (error) {
+    if (options.allowFixtureFallback || process.env.FORESIGHT_ALLOW_FIXTURE_FALLBACK === "true") {
+      return simulateFixture(request, options);
+    }
+
+    throw error;
+  }
 }

@@ -1,4 +1,4 @@
-﻿import type {
+import type {
   ContractLabel,
   DecodedCall,
   Finding,
@@ -52,6 +52,7 @@ export function runRiskRules(context: {
   forkBlock: number;
   valueAtRiskPct?: number;
   preferredScore?: number;
+  errorName?: string;
 }): {
   findings: Finding[];
   score: number;
@@ -63,7 +64,7 @@ export function runRiskRules(context: {
     ...unlimitedApprovalRule(context.decoded),
     ...unverifiedContractRule(context.decoded),
     ...hiddenStateWriteRule(context.stateChanges),
-    ...predictedRevertRule(context.success),
+    ...predictedRevertRule(context.success, context.errorName),
     ...valueDisproportionRule({
       valueAtRiskPct: context.valueAtRiskPct ?? 0,
       warnPct: Number(process.env.VALUE_WARN_PCT ?? 90),

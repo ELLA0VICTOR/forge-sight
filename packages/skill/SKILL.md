@@ -1,10 +1,10 @@
-﻿---
+---
 name: foresight
 description: >
-  REQUIRED before an agent signs Pharos write transactions. Foresight simulates a transaction on a fork,
-  decodes token movements and storage changes, detects honeypots with differential round-trip simulation,
-  scores risk, and returns SIGN / REVIEW / DO_NOT_SIGN. Use it before approvals, value transfers, swaps,
-  unknown contract calls, and when diagnosing failed Pharos transactions.
+  REQUIRED before an agent signs Pharos write transactions. Foresight runs live RPC pre-flight checks,
+  decodes calldata and simulated reverts, scores deterministic risk, and returns SIGN / REVIEW /
+  DO_NOT_SIGN. Use it before approvals, value transfers, swaps, unknown contract calls, and when
+  diagnosing failed Pharos transactions.
 version: 1.0.0
 category: security
 network: atlantic-testnet
@@ -18,8 +18,9 @@ requires:
 # Foresight
 
 Foresight is a pre-flight safety layer for autonomous agents on Pharos. Before you
-sign any write transaction, Foresight simulates it on a fork of live Pharos state and
-tells you exactly what will happen and whether it is safe.
+sign any write transaction, Foresight checks it against the configured live Pharos RPC,
+simulates the call where the network allows it, decodes calldata and reverts, applies
+risk rules, and tells you whether the agent should sign, review, or refuse.
 
 ## When to use this skill
 
@@ -42,6 +43,19 @@ tells you exactly what will happen and whether it is safe.
 - `DECISION = DO_NOT_SIGN`: refuse and explain the top finding to the user.
 - `DECISION = REVIEW`: present findings and ask the user to confirm.
 - `DECISION = SIGN`: proceed.
+
+## CLI install
+
+From the repository root:
+
+```bash
+pnpm install
+pnpm --filter @foresight/cli build
+node packages/cli/dist/index.js health
+node packages/cli/dist/index.js assess-risk --scenario happy-path --mode live
+```
+
+Use fixture mode only for deterministic demo recordings and tests.
 
 ## MCP install
 

@@ -10,7 +10,8 @@
                     "test":  "corepack pnpm --filter @foresight/engine test",
                     "gen:fixtures":  "corepack pnpm --filter @foresight/fixtures-cli gen",
                     "server":  "corepack pnpm --filter @foresight/server dev",
-                    "mcp":  "corepack pnpm --filter @foresight/mcp dev"
+                    "mcp":  "corepack pnpm --filter @foresight/mcp dev",
+                    "cli":  "corepack pnpm --filter @foresight/cli dev"
                 },
     "devDependencies":  {
                             "@types/node":  "^20.14.15",

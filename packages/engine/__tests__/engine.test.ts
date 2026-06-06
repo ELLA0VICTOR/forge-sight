@@ -1,4 +1,4 @@
-﻿import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
   diagnose,
   explainCalldata,
@@ -10,7 +10,7 @@ import {
 
 describe("Foresight engine", () => {
   it("returns SIGN for the happy-path swap with exact deltas", async () => {
-    const report = await simulate(happyPathTx());
+    const report = await simulate(happyPathTx(), { mode: "fixture" });
     const usdc = report.balanceDeltas.find((delta) => delta.symbol === "USDC");
     const wphrs = report.balanceDeltas.find((delta) => delta.symbol === "WPHRS");
 
@@ -21,7 +21,7 @@ describe("Foresight engine", () => {
   });
 
   it("detects a honeypot and refuses to sign", async () => {
-    const report = await simulate(honeypotTx());
+    const report = await simulate(honeypotTx(), { mode: "fixture" });
 
     expect(report.roundTrip?.tested).toBe(true);
     expect(report.roundTrip?.asymmetric).toBe(true);
@@ -41,14 +41,14 @@ describe("Foresight engine", () => {
   it("decodes unlimited approvals and routes them to high risk", async () => {
     const tx = unlimitedApprovalTx();
     const decoded = explainCalldata({ to: tx.to, data: tx.data });
-    const report = await simulate(tx);
+    const report = await simulate(tx, { mode: "fixture" });
 
     expect(decoded.humanReadable.toLowerCase()).toContain("unlimited");
     expect(report.findings.some((finding) => finding.id === "unlimited-approval")).toBe(true);
   });
 
   it("names the trapped state slot in the honeypot demo", async () => {
-    const report = await simulate(honeypotTx());
+    const report = await simulate(honeypotTx(), { mode: "fixture" });
     const trapped = report.stateChanges.find((change) => change.variable.startsWith("trapped["));
 
     expect(trapped?.isCritical).toBe(true);

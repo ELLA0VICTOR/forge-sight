@@ -1,11 +1,11 @@
-﻿import { RiShieldCheckLine, RiShieldFlashLine } from "react-icons/ri";
+import { RiShieldCheckLine, RiShieldFlashLine } from "react-icons/ri";
 import type { DiagnoseReport, SimReport } from "@foresight/engine";
 import { txValueLabel } from "../../lib/format";
 import { Address } from "../primitives/Address";
 
 function Label({ children }: { children: React.ReactNode }) {
   return (
-    <div className="font-sans text-[13px] font-semibold text-text2">
+    <div className="font-mono text-[10px] uppercase tracking-[0.1em] text-text4">
       {children}
     </div>
   );
@@ -13,7 +13,7 @@ function Label({ children }: { children: React.ReactNode }) {
 
 function SummarySkeleton() {
   return (
-    <section className="rounded-[16px] border border-border bg-bgDeep/30 p-5">
+    <section className="border-b border-border py-4">
       <Label>Analysis summary</Label>
       <div className="mt-4 grid gap-3">
         <div className="skeleton-line w-full" />
@@ -24,7 +24,7 @@ function SummarySkeleton() {
   );
 }
 
-function VerifiedBadge({ verified }: { verified: boolean }) {
+function VerifiedStatus({ verified }: { verified: boolean }) {
   const Icon = verified ? RiShieldCheckLine : RiShieldFlashLine;
 
   return (
@@ -33,16 +33,16 @@ function VerifiedBadge({ verified }: { verified: boolean }) {
       title={verified ? "Verified ABI matched" : "Unverified contract"}
     >
       <Icon className="size-4" />
-      <span className="font-sans text-[12px] font-semibold">{verified ? "Verified" : "Unverified"}</span>
+      <span>{verified ? "verified" : "unverified"}</span>
     </span>
   );
 }
 
 function Fact({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="flex min-w-0 items-center gap-2">
-      <span className="font-sans text-[12px] font-semibold text-text3">{label}</span>
-      <span className="min-w-0 font-mono text-[12px] font-normal tabular text-text2">{children}</span>
+    <div className="grid min-h-9 grid-cols-[78px_1fr] items-center border-b border-border font-mono text-[11px] tabular last:border-b-0">
+      <span className="text-text4">{label}</span>
+      <span className="min-w-0 text-text2">{children}</span>
     </div>
   );
 }
@@ -60,13 +60,13 @@ export function TransactionSummary({
 
   if (diagnosis && !report) {
     return (
-      <section className="rounded-[16px] border border-border bg-bgDeep/30 p-5 transition-colors hover:border-border2">
+      <section className="border-b border-border py-4">
         <Label>Analysis summary</Label>
-        <p className="mt-3 font-sans text-[14px] font-normal leading-[1.65] text-text2">{diagnosis.rootCause}</p>
-        <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-border pt-4">
-          <Fact label="Tx"><Address value={diagnosis.txHash} label="hash" /></Fact>
-          <Fact label="Frame">{diagnosis.revertingFrame}</Fact>
-          <Fact label="Error"><span className="text-red">{diagnosis.errorName}</span></Fact>
+        <p className="mt-3 font-sans text-[13px] font-normal leading-[1.65] text-text2">{diagnosis.rootCause}</p>
+        <div className="mt-4 border-t border-border">
+          <Fact label="tx"><Address value={diagnosis.txHash} label="hash" /></Fact>
+          <Fact label="frame">{diagnosis.revertingFrame}</Fact>
+          <Fact label="error"><span className="text-red">{diagnosis.errorName}</span></Fact>
         </div>
       </section>
     );
@@ -75,15 +75,15 @@ export function TransactionSummary({
   if (!report) return <SummarySkeleton />;
 
   return (
-    <section className="rounded-[16px] border border-border bg-bgDeep/30 p-5 transition-colors hover:border-border2">
+    <section className="border-b border-border py-4">
       <Label>Analysis summary</Label>
-      <p className="mt-3 font-sans text-[14px] font-normal leading-[1.65] text-text2">{report.verdict.paragraph}</p>
-      <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-border pt-4">
-        <Fact label="From"><Address value={report.tx.from} label="agent" /></Fact>
-        <Fact label="To"><Address value={report.tx.to} label={report.decoded.contractName} /></Fact>
-        <VerifiedBadge verified={report.decoded.verified} />
-        <Fact label="Fn">{report.decoded.functionName}</Fact>
-        <Fact label="Value">{txValueLabel(report)}</Fact>
+      <p className="mt-3 font-sans text-[13px] font-normal leading-[1.65] text-text2">{report.verdict.paragraph}</p>
+      <div className="mt-4 border-t border-border">
+        <Fact label="from"><Address value={report.tx.from} label="agent" /></Fact>
+        <Fact label="to"><Address value={report.tx.to} label={report.decoded.contractName} /></Fact>
+        <Fact label="abi"><VerifiedStatus verified={report.decoded.verified} /></Fact>
+        <Fact label="function">{report.decoded.functionName}</Fact>
+        <Fact label="value">{txValueLabel(report)}</Fact>
       </div>
     </section>
   );

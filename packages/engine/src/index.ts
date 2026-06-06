@@ -1,4 +1,4 @@
-﻿export type {
+export type {
   Address,
   BalanceDelta,
   CallNode,
@@ -25,7 +25,7 @@
 export { demoAddresses, networkConfig } from "./config.js";
 export { explainCalldata } from "./decoder/calldata.js";
 export { renderDiagnosisForAgent, renderReportForAgent } from "./explain/agentText.js";
-export { diagnose } from "./diagnose/diagnose.js";
+export { diagnose, demoFailedTxHash } from "./diagnose/diagnose.js";
 export {
   failingSwapTx,
   happyPathTx,
