@@ -293,7 +293,7 @@ function VerdictShowcase() {
 function LandingFooter() {
   return (
     <footer className="landing-footer relative z-10 overflow-hidden border-t border-border">
-      <div className="landing-footer-links mx-auto grid max-w-[980px] grid-cols-1 gap-8 px-6 pt-16 font-sans text-[18px] leading-[1.75] text-text2 sm:grid-cols-[1fr_0.8fr_1fr] md:px-10">
+      <div className="landing-footer-links grid grid-cols-1 gap-x-10 gap-y-4 px-6 pt-12 font-sans text-[17px] leading-[1.65] text-text2 sm:grid-cols-[1fr_0.72fr_0.9fr] md:px-10">
         <div className="grid content-start gap-1">
           <span>Documentation</span>
           <span>Skill README</span>
@@ -305,12 +305,12 @@ function LandingFooter() {
           <span>Discord</span>
           <span>Demo</span>
         </div>
-        <div className="content-start text-left sm:text-center">
+        <div className="content-start text-left">
           <span>Foresight {"\u00a9"} 2026</span>
         </div>
       </div>
 
-      <BrandMark size={1600} className="footer-mega-mark" />
+      <BrandMark size={1320} className="footer-mega-mark" />
       <span className="footer-spark footer-spark--left" aria-hidden />
       <span className="footer-spark footer-spark--middle" aria-hidden />
       <span className="footer-spark footer-spark--right" aria-hidden />

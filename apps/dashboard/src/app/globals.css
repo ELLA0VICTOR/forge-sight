@@ -180,11 +180,11 @@ summary {
 }
 
 .fall-stage {
-  min-height: 740px;
-  height: min(860px, 88vh);
+  min-height: 790px;
+  height: min(900px, 90vh);
   background:
-    radial-gradient(circle at 50% 50%, rgba(235,231,237,0.095), transparent 20%),
-    linear-gradient(180deg, rgba(255,255,255,0.016), transparent 48%),
+    radial-gradient(circle at 50% 47%, rgba(235,231,237,0.095), transparent 18%),
+    linear-gradient(180deg, rgba(255,255,255,0.018), transparent 46%),
     var(--bg-deep);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.045),
@@ -198,17 +198,17 @@ summary {
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(113deg, transparent 0 49.5%, rgba(255,255,255,0.055) 50%, transparent 50.5%),
-    linear-gradient(101deg, transparent 0 56%, rgba(255,255,255,0.035) 56.3%, transparent 56.8%),
+    linear-gradient(111deg, transparent 0 48.7%, rgba(255,255,255,0.055) 49%, transparent 49.4%),
+    linear-gradient(101deg, transparent 0 57%, rgba(255,255,255,0.034) 57.2%, transparent 57.8%),
     repeating-linear-gradient(90deg, rgba(255,255,255,0.026) 0 1px, transparent 1px 270px),
     repeating-linear-gradient(0deg, rgba(255,255,255,0.016) 0 1px, transparent 1px 96px);
-  opacity: 0.62;
+  opacity: 0.64;
 }
 
 .fall-floor {
   position: absolute;
   inset: auto 0 0 0;
-  height: 118px;
+  height: 128px;
   pointer-events: none;
   background:
     linear-gradient(180deg, transparent, rgba(0,0,0,0.48) 48%, rgba(255,255,255,0.04)),
@@ -220,24 +220,24 @@ summary {
   position: absolute;
   left: 8%;
   right: 8%;
-  bottom: 82px;
+  bottom: 92px;
   height: 1px;
-  background: rgba(235,231,237,0.14);
+  background: rgba(235,231,237,0.15);
 }
 
 .fall-main-button {
   position: absolute;
   left: 50%;
-  top: 47%;
+  top: 44%;
   z-index: 10;
   display: inline-flex;
   min-height: 58px;
-  min-width: 270px;
+  min-width: 288px;
   align-items: center;
   justify-content: center;
   gap: 10px;
   border-radius: 13px;
-  border: 1px solid rgba(255,255,255,0.74);
+  border: 1px solid rgba(255,255,255,0.78);
   background: var(--button);
   color: var(--button-text);
   font-family: var(--font-sans), sans-serif;
@@ -252,7 +252,7 @@ summary {
 }
 
 .fall-stage--active .fall-main-button {
-  animation: main-button-drop 1500ms cubic-bezier(.18,.86,.28,1) both;
+  animation: main-button-drop 1600ms cubic-bezier(.18,.86,.28,1) both;
 }
 
 .fall-stage--idle .fall-chip,
@@ -265,146 +265,161 @@ summary {
   position: absolute;
   z-index: 5;
   display: inline-flex;
-  min-height: 60px;
-  min-width: 220px;
+  min-height: 58px;
+  min-width: 214px;
   align-items: center;
   justify-content: center;
   gap: 8px;
   border-radius: 12px;
-  border: 1px solid rgba(187,182,195,0.48);
-  background: rgba(18,17,22,0.28);
-  padding: 0 30px;
-  color: rgba(187,182,195,0.66);
+  border: 1px solid rgba(187,182,195,0.5);
+  background: rgba(18,17,22,0.31);
+  padding: 0 28px;
+  color: rgba(187,182,195,0.68);
   font-family: var(--font-sans), sans-serif;
-  font-size: 22px;
+  font-size: 21px;
   font-weight: 500;
   letter-spacing: -0.045em;
   white-space: nowrap;
   opacity: 0;
-  transform: translate3d(var(--sky-x), -980px, 0) rotate(var(--start-rotate));
+  transform: translate3d(var(--sky-x), -1040px, 0) rotate(var(--start-rotate));
 }
 
 .fall-stage--active .fall-chip {
-  animation: chip-fall 5200ms cubic-bezier(.18,.64,.2,1) both;
+  animation-duration: 6200ms;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(.17,.67,.22,1);
 }
 
 .fall-chip--approval {
-  left: 8.5%;
-  bottom: 100px;
+  left: 7.5%;
+  bottom: 122px;
   --sky-x: -160px;
-  --start-rotate: -28deg;
-  --button-x: 510px;
-  --button-y: -330px;
-  --button-rotate: -4deg;
-  --bounce-x: 48px;
-  --bounce-y: -46px;
-  --mid-x: 190px;
-  --mid-y: -110px;
-  --impact-rotate: -11deg;
-  --settle-rotate: 4deg;
-  animation-delay: 520ms;
+  --start-rotate: -20deg;
+  --mid-x: -32px;
+  --mid-y: -390px;
+  --impact-rotate: -7deg;
+  --settle-rotate: 5deg;
+  animation-name: chip-fall-direct;
+  animation-delay: 80ms;
 }
 
 .fall-chip--simulation {
-  left: 15%;
-  bottom: 36px;
-  --sky-x: -60px;
-  --start-rotate: 12deg;
-  --button-x: 390px;
-  --button-y: -380px;
-  --button-rotate: 2deg;
-  --bounce-x: 34px;
-  --bounce-y: -38px;
-  --mid-x: 120px;
-  --mid-y: -130px;
-  --impact-rotate: 6deg;
+  left: 13%;
+  bottom: 50px;
+  --sky-x: -90px;
+  --start-rotate: 13deg;
+  --mid-x: 24px;
+  --mid-y: -430px;
+  --impact-rotate: 3deg;
   --settle-rotate: 0deg;
-  animation-delay: 820ms;
-}
-
-.fall-chip--contract {
-  right: 9%;
-  bottom: 128px;
-  --sky-x: 180px;
-  --start-rotate: 32deg;
-  --button-x: -520px;
-  --button-y: -310px;
-  --button-rotate: 7deg;
-  --bounce-x: -54px;
-  --bounce-y: -44px;
-  --mid-x: -230px;
-  --mid-y: -90px;
-  --impact-rotate: -36deg;
-  --settle-rotate: -51deg;
-  animation-delay: 640ms;
-}
-
-.fall-chip--moon {
-  right: 18.5%;
-  bottom: 104px;
-  --sky-x: 100px;
-  --start-rotate: -17deg;
-  --button-x: -360px;
-  --button-y: -330px;
-  --button-rotate: -4deg;
-  --bounce-x: -42px;
-  --bounce-y: -48px;
-  --mid-x: -130px;
-  --mid-y: -125px;
-  --impact-rotate: 52deg;
-  --settle-rotate: 74deg;
-  animation-delay: 1120ms;
-}
-
-.fall-chip--send {
-  right: 20.5%;
-  bottom: 36px;
-  --sky-x: 90px;
-  --start-rotate: 22deg;
-  --button-x: -310px;
-  --button-y: -385px;
-  --button-rotate: 3deg;
-  --bounce-x: -30px;
-  --bounce-y: -34px;
-  --mid-x: -95px;
-  --mid-y: -130px;
-  --impact-rotate: -5deg;
-  --settle-rotate: 0deg;
-  animation-delay: 1440ms;
+  animation-name: chip-fall-direct;
+  animation-delay: 260ms;
 }
 
 .fall-chip--calldata {
-  left: 36%;
-  bottom: 54px;
-  --sky-x: -30px;
-  --start-rotate: -18deg;
-  --button-x: 40px;
-  --button-y: -370px;
-  --button-rotate: -1deg;
-  --bounce-x: 22px;
+  left: 33%;
+  bottom: 64px;
+  --sky-x: -10px;
+  --start-rotate: -14deg;
+  --button-x: 24px;
+  --button-y: -338px;
+  --button-rotate: -2deg;
+  --bounce-x: 42px;
   --bounce-y: -42px;
-  --mid-x: 26px;
-  --mid-y: -120px;
-  --impact-rotate: 44deg;
-  --settle-rotate: 61deg;
-  animation-delay: 990ms;
+  --mid-x: 38px;
+  --mid-y: -145px;
+  --impact-rotate: 48deg;
+  --settle-rotate: 62deg;
+  animation-name: chip-hit-left;
+  animation-delay: 360ms;
+}
+
+.fall-chip--decode {
+  left: 23%;
+  bottom: 40px;
+  --sky-x: -130px;
+  --start-rotate: 26deg;
+  --mid-x: -18px;
+  --mid-y: -460px;
+  --impact-rotate: 11deg;
+  --settle-rotate: -11deg;
+  animation-name: chip-fall-direct;
+  animation-delay: 520ms;
+}
+
+.fall-chip--contract {
+  right: 8%;
+  bottom: 128px;
+  --sky-x: 170px;
+  --start-rotate: 30deg;
+  --button-x: -530px;
+  --button-y: -310px;
+  --button-rotate: 8deg;
+  --bounce-x: -64px;
+  --bounce-y: -42px;
+  --mid-x: -250px;
+  --mid-y: -96px;
+  --impact-rotate: -36deg;
+  --settle-rotate: -51deg;
+  animation-name: chip-hit-right;
+  animation-delay: 200ms;
+}
+
+.fall-chip--moon {
+  right: 21%;
+  bottom: 98px;
+  --sky-x: 90px;
+  --start-rotate: -17deg;
+  --button-x: -350px;
+  --button-y: -320px;
+  --button-rotate: -4deg;
+  --bounce-x: -38px;
+  --bounce-y: -50px;
+  --mid-x: -118px;
+  --mid-y: -118px;
+  --impact-rotate: 50deg;
+  --settle-rotate: 72deg;
+  animation-name: chip-hit-right-late;
+  animation-delay: 420ms;
+}
+
+.fall-chip--send {
+  right: 18%;
+  bottom: 50px;
+  --sky-x: 80px;
+  --start-rotate: 14deg;
+  --mid-x: 10px;
+  --mid-y: -420px;
+  --impact-rotate: -4deg;
+  --settle-rotate: 0deg;
+  animation-name: chip-fall-direct;
+  animation-delay: 660ms;
 }
 
 .fall-chip--exit {
-  right: 5.5%;
-  bottom: 36px;
+  right: 4%;
+  bottom: 50px;
   --sky-x: 210px;
-  --start-rotate: 18deg;
-  --button-x: -650px;
-  --button-y: -385px;
-  --button-rotate: 5deg;
-  --bounce-x: -62px;
-  --bounce-y: -38px;
-  --mid-x: -260px;
-  --mid-y: -126px;
-  --impact-rotate: 3deg;
+  --start-rotate: 19deg;
+  --mid-x: 18px;
+  --mid-y: -440px;
+  --impact-rotate: 5deg;
   --settle-rotate: 0deg;
-  animation-delay: 1680ms;
+  animation-name: chip-fall-direct;
+  animation-delay: 760ms;
+}
+
+.fall-chip--trace {
+  right: 32%;
+  bottom: 34px;
+  --sky-x: 70px;
+  --start-rotate: -22deg;
+  --mid-x: -28px;
+  --mid-y: -470px;
+  --impact-rotate: 7deg;
+  --settle-rotate: 0deg;
+  animation-name: chip-fall-direct;
+  animation-delay: 560ms;
 }
 
 @keyframes live-blink {
@@ -430,7 +445,7 @@ summary {
 @keyframes main-button-drop {
   0% {
     opacity: 0;
-    transform: translate(-50%, -520px) rotate(-3deg);
+    transform: translate(-50%, -560px) rotate(-3deg);
   }
   58% {
     opacity: 1;
@@ -445,20 +460,42 @@ summary {
   }
 }
 
-@keyframes chip-fall {
+@keyframes chip-fall-direct {
   0% {
     opacity: 0;
-    transform: translate3d(var(--sky-x), -980px, 0) rotate(var(--start-rotate));
+    transform: translate3d(var(--sky-x), -1040px, 0) rotate(var(--start-rotate));
   }
-  18% {
+  13% {
     opacity: 1;
   }
-  43% {
+  56% {
     opacity: 1;
+    transform: translate3d(var(--mid-x), var(--mid-y), 0) rotate(var(--start-rotate));
+  }
+  78% {
+    transform: translate3d(0, 22px, 0) rotate(var(--impact-rotate));
+  }
+  88% {
+    transform: translate3d(0, -16px, 0) rotate(calc(var(--settle-rotate) - 3deg));
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(var(--settle-rotate));
+  }
+}
+
+@keyframes chip-hit-left {
+  0% {
+    opacity: 0;
+    transform: translate3d(var(--sky-x), -1040px, 0) rotate(var(--start-rotate));
+  }
+  12% {
+    opacity: 1;
+  }
+  38% {
     transform: translate3d(var(--button-x), var(--button-y), 0) rotate(var(--button-rotate));
   }
-  50% {
-    opacity: 1;
+  45% {
     transform: translate3d(
       calc(var(--button-x) + var(--bounce-x)),
       calc(var(--button-y) + var(--bounce-y)),
@@ -466,16 +503,83 @@ summary {
     ) rotate(var(--impact-rotate));
   }
   68% {
-    opacity: 1;
     transform: translate3d(var(--mid-x), var(--mid-y), 0) rotate(var(--impact-rotate));
   }
-  88% {
-    opacity: 1;
-    transform: translate3d(0, 18px, 0) rotate(var(--settle-rotate));
+  87% {
+    transform: translate3d(0, 20px, 0) rotate(var(--settle-rotate));
   }
   100% {
     opacity: 1;
     transform: translate3d(0, 0, 0) rotate(var(--settle-rotate));
+  }
+}
+
+@keyframes chip-hit-right {
+  0% {
+    opacity: 0;
+    transform: translate3d(var(--sky-x), -1040px, 0) rotate(var(--start-rotate));
+  }
+  12% {
+    opacity: 1;
+  }
+  40% {
+    transform: translate3d(var(--button-x), var(--button-y), 0) rotate(var(--button-rotate));
+  }
+  48% {
+    transform: translate3d(
+      calc(var(--button-x) + var(--bounce-x)),
+      calc(var(--button-y) + var(--bounce-y)),
+      0
+    ) rotate(var(--impact-rotate));
+  }
+  66% {
+    transform: translate3d(var(--mid-x), var(--mid-y), 0) rotate(var(--impact-rotate));
+  }
+  84% {
+    transform: translate3d(0, 20px, 0) rotate(var(--settle-rotate));
+  }
+  94% {
+    transform: translate3d(-8px, -8px, 0) rotate(calc(var(--settle-rotate) + 2deg));
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(var(--settle-rotate));
+  }
+}
+
+@keyframes chip-hit-right-late {
+  0% {
+    opacity: 0;
+    transform: translate3d(var(--sky-x), -1040px, 0) rotate(var(--start-rotate));
+  }
+  12% {
+    opacity: 1;
+  }
+  40% {
+    transform: translate3d(var(--button-x), var(--button-y), 0) rotate(var(--button-rotate));
+  }
+  48% {
+    transform: translate3d(
+      calc(var(--button-x) + var(--bounce-x)),
+      calc(var(--button-y) + var(--bounce-y)),
+      0
+    ) rotate(var(--impact-rotate));
+  }
+  66% {
+    transform: translate3d(var(--mid-x), var(--mid-y), 0) rotate(var(--impact-rotate));
+  }
+  80% {
+    transform: translate3d(0, 18px, 0) rotate(var(--settle-rotate));
+  }
+  89% {
+    transform: translate3d(0, 0, 0) rotate(var(--settle-rotate));
+  }
+  95% {
+    transform: translate3d(54px, -6px, 0) rotate(calc(var(--settle-rotate) + 7deg));
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(44px, 0, 0) rotate(calc(var(--settle-rotate) + 4deg));
   }
 }
 
@@ -492,12 +596,12 @@ summary {
 
 @media (max-width: 920px) {
   .fall-stage {
-    min-height: 660px;
-    height: 760px;
+    min-height: 690px;
+    height: 780px;
   }
 
   .fall-main-button {
-    top: 42%;
+    top: 40%;
     min-width: 230px;
     min-height: 52px;
     font-size: 18px;
@@ -512,21 +616,23 @@ summary {
 
   .fall-chip--approval,
   .fall-chip--simulation,
-  .fall-chip--calldata {
+  .fall-chip--calldata,
+  .fall-chip--decode {
     left: 7%;
   }
 
   .fall-chip--moon,
   .fall-chip--send,
   .fall-chip--exit,
-  .fall-chip--contract {
+  .fall-chip--contract,
+  .fall-chip--trace {
     right: 7%;
   }
 }
 
 @media (max-width: 560px) {
   .fall-stage {
-    min-height: 620px;
+    min-height: 640px;
   }
 
   .fall-chip {
@@ -534,15 +640,17 @@ summary {
   }
 
   .fall-chip--contract,
-  .fall-chip--calldata {
+  .fall-chip--calldata,
+  .fall-chip--decode {
     display: none;
   }
 }
 
 .landing-footer {
-  min-height: 620px;
+  min-height: 500px;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.012), transparent 34%),
+    radial-gradient(circle at 72% 78%, rgba(235,231,237,0.1), transparent 21%),
+    linear-gradient(180deg, rgba(255,255,255,0.014), transparent 34%),
     var(--bg);
 }
 
@@ -552,37 +660,45 @@ summary {
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(112deg, transparent 0 47%, rgba(255,255,255,0.06) 47.2%, transparent 47.6%),
-    linear-gradient(101deg, transparent 0 58%, rgba(255,255,255,0.04) 58.2%, transparent 58.6%),
+    linear-gradient(112deg, transparent 0 47%, rgba(255,255,255,0.064) 47.2%, transparent 47.6%),
+    linear-gradient(101deg, transparent 0 58%, rgba(255,255,255,0.044) 58.2%, transparent 58.6%),
     repeating-linear-gradient(90deg, rgba(255,255,255,0.032) 0 1px, transparent 1px 310px),
     repeating-linear-gradient(0deg, rgba(255,255,255,0.018) 0 1px, transparent 1px 108px);
-  opacity: 0.74;
+  opacity: 0.72;
 }
 
 .landing-footer-links {
   position: relative;
-  z-index: 3;
-  margin-left: min(24vw, 460px);
+  z-index: 4;
+  max-width: 720px;
+  margin-left: clamp(260px, 28vw, 445px);
 }
 
 .footer-mega-mark {
   position: absolute;
   z-index: 1;
-  left: -3vw;
-  bottom: -260px;
-  width: min(1640px, 118vw);
+  left: -2.2vw;
+  bottom: -178px;
+  width: min(1320px, 104vw);
   height: auto;
-  color: #030306;
-  opacity: 0.98;
+  color: #020205;
+  opacity: 0.99;
   filter:
-    drop-shadow(0 -2px 0 rgba(255,255,255,0.38))
-    drop-shadow(18px -22px 32px rgba(235,231,237,0.14))
-    drop-shadow(-10px -18px 24px rgba(255,255,255,0.08));
+    drop-shadow(0 -1px 0 rgba(255,255,255,0.62))
+    drop-shadow(0 -10px 18px rgba(235,231,237,0.16))
+    drop-shadow(22px -28px 38px rgba(184,190,210,0.16))
+    drop-shadow(-14px -16px 28px rgba(255,255,255,0.08));
+}
+
+.footer-mega-mark path {
+  stroke: rgba(255,255,255,0.24);
+  stroke-width: 0.55;
+  vector-effect: non-scaling-stroke;
 }
 
 .footer-spark {
   position: absolute;
-  z-index: 2;
+  z-index: 3;
   width: 72px;
   height: 72px;
   pointer-events: none;
@@ -596,7 +712,7 @@ summary {
   top: 50%;
   background: rgba(255,255,255,0.92);
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 30px rgba(255,255,255,0.45);
+  box-shadow: 0 0 30px rgba(255,255,255,0.48);
 }
 
 .footer-spark::before {
@@ -611,25 +727,25 @@ summary {
 
 .footer-spark--left {
   left: 12%;
-  top: 130px;
-  transform: rotate(42deg) scale(0.72);
+  top: 92px;
+  transform: rotate(42deg) scale(0.74);
 }
 
 .footer-spark--middle {
-  left: 44%;
-  bottom: 170px;
-  transform: rotate(42deg) scale(0.5);
+  left: 43%;
+  bottom: 128px;
+  transform: rotate(42deg) scale(0.48);
 }
 
 .footer-spark--right {
-  right: 6%;
-  bottom: 230px;
-  transform: rotate(42deg) scale(0.64);
+  right: 7%;
+  bottom: 166px;
+  transform: rotate(42deg) scale(0.62);
 }
 
 @media (max-width: 760px) {
   .landing-footer {
-    min-height: 520px;
+    min-height: 460px;
   }
 
   .landing-footer-links {
@@ -637,7 +753,7 @@ summary {
   }
 
   .footer-mega-mark {
-    bottom: -120px;
-    width: 145vw;
+    bottom: -98px;
+    width: 142vw;
   }
 }
