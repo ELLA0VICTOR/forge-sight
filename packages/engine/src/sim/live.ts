@@ -1,5 +1,6 @@
 import {
   decodeErrorResult,
+  encodeFunctionData,
   formatEther,
   formatUnits,
   type Abi,
@@ -11,13 +12,14 @@ import type {
   EventSummary,
   Finding,
   Hex,
+  RoundTripResult,
   SimReport,
   StateChange,
   TelemetryEvent,
   TxRequest,
 } from "../types.js";
-import { DEFAULT_FORK_BLOCK, labelFor, networkConfig } from "../config.js";
-import { erc20Abi, honeypotAbi, resolveAbi, simpleRouterAbi, symbolFor } from "../decoder/abi.js";
+import { DEFAULT_FORK_BLOCK, demoAddresses, labelFor, networkConfig } from "../config.js";
+import { erc20Abi, honeypotAbi, resolveAbi, roundTripProbeAbi, simpleRouterAbi, symbolFor } from "../decoder/abi.js";
 import { decodeCalldata } from "../decoder/calldata.js";
 import { callNode } from "../decoder/calltree.js";
 import { buildVerdict } from "../explain/verdict.js";
@@ -127,11 +129,32 @@ function collectErrorData(value: unknown, seen = new Set<unknown>()): Hex | unde
     return undefined;
   }
 
+  const record = value as Record<string, unknown>;
+  for (const key of ["data", "result", "output", "returnData"]) {
+    const candidate = record[key];
+    if (typeof candidate === "string" && /^0x[a-fA-F0-9]{8,}$/.test(candidate)) {
+      return candidate as Hex;
+    }
+  }
+
+  for (const key of ["cause", "error"]) {
+    const data = collectErrorData(record[key], seen);
+    if (data) return data;
+  }
+
   seen.add(value);
 
-  for (const candidate of Object.values(value as Record<string, unknown>)) {
+  for (const [key, candidate] of Object.entries(record)) {
+    if (key === "raw" || key === "request" || key === "body") {
+      continue;
+    }
+
     const data = collectErrorData(candidate, seen);
     if (data) return data;
+  }
+
+  if (typeof value === "string" && /^0x[a-fA-F0-9]{8,}$/.test(value)) {
+    return value as Hex;
   }
 
   return undefined;
@@ -234,6 +257,84 @@ function makeLiveInfoFindings(input: {
   ];
 }
 
+function amountOutForProbe(request: TxRequest, decoded: ReturnType<typeof decodeCalldata>): bigint {
+  const value = asValue(request.value);
+  if (value > 0n) return value * 980n;
+
+  const minOut = decoded.args.minOut;
+  if (minOut && /^\d+$/.test(minOut)) {
+    return BigInt(minOut);
+  }
+
+  return 1n;
+}
+
+async function probeLiveRoundTrip(input: {
+  client: ReturnType<typeof createForkPublicClient>;
+  request: TxRequest;
+  decoded: ReturnType<typeof decodeCalldata>;
+  success: boolean;
+  telemetry: ReturnType<typeof makeTelemetry>;
+  sink: LiveTelemetrySink | undefined;
+}): Promise<RoundTripResult | undefined> {
+  if (!input.success || input.decoded.functionName !== "swap") return undefined;
+
+  const tokenOut = input.decoded.args.tokenOut as Address | undefined;
+  if (!tokenOut) return undefined;
+
+  const supportedToken =
+    tokenOut === demoAddresses.moon ||
+    tokenOut === demoAddresses.wphrs ||
+    tokenOut === demoAddresses.usdc;
+  if (!supportedToken) return undefined;
+
+  const probeCode = await input.client.getCode({ address: demoAddresses.probe }).catch(() => undefined);
+  if (!probeCode || probeCode === "0x") {
+    input.telemetry.push("SIMULATING", "warn", "round-trip probe contract is not deployed", input.sink);
+    return undefined;
+  }
+
+  input.telemetry.push("SIMULATING", "info", "running live round-trip exit probe", input.sink);
+
+  try {
+    await input.client.call({
+      account: input.request.from,
+      to: demoAddresses.probe,
+      data: encodeFunctionData({
+        abi: roundTripProbeAbi,
+        functionName: "probe",
+        args: [tokenOut, amountOutForProbe(input.request, input.decoded)],
+      }),
+    });
+
+    input.telemetry.push("SIMULATING", "ok", "round-trip probe exited cleanly", input.sink);
+    return {
+      tested: true,
+      token: tokenOut,
+      tokenSymbol: symbolFor(tokenOut),
+      buy: "ok",
+      sellAsAgent: "ok",
+      sellAsFresh: "ok",
+      sellAsOwner: "ok",
+      asymmetric: false,
+    };
+  } catch (error) {
+    const decodedError = decodeRevert(error, honeypotAbi);
+    input.telemetry.push("SIMULATING", "error", `round-trip probe reverted${decodedError.errorName ? `: ${decodedError.errorName}` : ""}`, input.sink);
+    return {
+      tested: true,
+      token: tokenOut,
+      tokenSymbol: symbolFor(tokenOut),
+      buy: "ok",
+      sellAsAgent: "reverted",
+      sellAsFresh: "reverted",
+      sellAsOwner: "ok",
+      errorName: decodedError.errorName ?? "Reverted",
+      asymmetric: true,
+    };
+  }
+}
+
 export async function simulateLive(
   request: TxRequest,
   options: { onTelemetry?: LiveTelemetrySink } = {},
@@ -306,12 +407,21 @@ export async function simulateLive(
   const stateChanges: StateChange[] = [];
   const events: EventSummary[] = [];
   const balanceDeltas = makePredictedDeltas(request);
+  const roundTrip = await probeLiveRoundTrip({
+    client,
+    request,
+    decoded,
+    success,
+    telemetry,
+    sink: options.onTelemetry,
+  });
   const risk = runRiskRules({
     decoded,
     success,
     stateChanges,
     label,
     forkBlock,
+    ...(roundTrip ? { roundTrip } : {}),
     ...(errorName ? { errorName } : {}),
     valueAtRiskPct: value > 0n ? 100 : 0,
   });
@@ -351,6 +461,7 @@ export async function simulateLive(
     stateChanges,
     events,
     findings,
+    ...(roundTrip ? { roundTrip } : {}),
     callTree: makeCallTree({
       request,
       contractName: resolved.contractName,

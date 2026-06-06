@@ -75,6 +75,19 @@ export const honeypotAbi = [
   },
 ] as const satisfies Abi;
 
+export const roundTripProbeAbi = [
+  {
+    type: "function",
+    name: "probe",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "token", type: "address" },
+      { name: "amount", type: "uint256" },
+    ],
+    outputs: [{ name: "ok", type: "bool" }],
+  },
+] as const satisfies Abi;
+
 export function resolveAbi(address: Address): { abi: Abi; verified: boolean; contractName: string } {
   const label = labelFor(address);
 

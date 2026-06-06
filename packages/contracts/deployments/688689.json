@@ -1,11 +1,14 @@
 {
   "network": "atlantic-testnet",
   "chainId": 688689,
-  "note": "Deterministic fixture labels. Replace with real deployed addresses after forge script deployment.",
+  "deployedAt": "2026-06-06T15:39:54.112Z",
+  "deployer": "0x25dADe8e5Ce7c78D8135676Ea40B99D114798a42",
+  "note": "Real Pharos Atlantic testnet demo deployment.",
   "contracts": {
-    "USDC": "0xE0BE08c77f415F577A1B3A9aD7a1Df1479564ec8",
-    "WPHRS": "0x838800b758277CC111B2d48Ab01e5E164f8E9471",
-    "MOON": "0x00000000000000000000000000000000F0e51002",
-    "SimpleRouter": "0x00000000000000000000000000000000F0e51001"
+    "USDC": "0x5420f2D7c9219FD6E7d44b571762D1aa4824cDFc",
+    "WPHRS": "0x6C21fA4468d4bCd05FCb628addF187574C84fAAC",
+    "MOON": "0xCE26F3e00AE932C420A30E52A93bb141C543ECdf",
+    "SimpleRouter": "0x4d7C3EF2d8553F9502b7EcbAB056F1981C89BadA",
+    "RoundTripProbe": "0x4d7c79F36EFD1E78f986B8E422312Be2e7D0Fc83"
   }
 }

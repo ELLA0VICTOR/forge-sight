@@ -13,7 +13,6 @@
     "types": [
       "node"
     ],
-    "baseUrl": ".",
     "paths": {},
     "isolatedModules": true
   },

@@ -12,10 +12,10 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
     "paths": {
-      "@foresight/engine": ["packages/engine/src/index.ts"],
-      "@foresight/engine/*": ["packages/engine/src/*"]
+      "@foresight/engine": ["./packages/engine/src/index.ts"],
+      "@foresight/engine/*": ["./packages/engine/src/*"]
     }
   }
 }
+

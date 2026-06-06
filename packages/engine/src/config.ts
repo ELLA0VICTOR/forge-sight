@@ -1,4 +1,4 @@
-﻿import type { Address, ContractLabel, NetworkConfig } from "./types.js";
+import type { Address, ContractLabel, NetworkConfig } from "./types.js";
 
 export const DEFAULT_FORK_BLOCK = Number(process.env.FORK_BLOCK ?? 23559136);
 
@@ -18,14 +18,19 @@ export const networkConfig: NetworkConfig = {
   forkBlock: DEFAULT_FORK_BLOCK,
 };
 
+function envAddress(name: string, fallback: Address): Address {
+  return (process.env[name] ?? fallback) as Address;
+}
+
 export const demoAddresses = {
-  agent: "0xa1b2000000000000000000000000000000000001",
-  router: "0x00000000000000000000000000000000f0e51001",
-  moon: "0x00000000000000000000000000000000f0e51002",
-  owner: "0x00000000000000000000000000000000f0e51003",
-  fresh: "0x00000000000000000000000000000000f0e51004",
-  usdc: "0xE0BE08c77f415F577A1B3A9aD7a1Df1479564ec8",
-  wphrs: "0x838800b758277CC111B2d48Ab01e5E164f8E9471",
+  agent: envAddress("DEMO_AGENT_ADDRESS", "0xa1b2000000000000000000000000000000000001"),
+  router: envAddress("ADDR_ROUTER", "0x00000000000000000000000000000000f0e51001"),
+  moon: envAddress("ADDR_MOON", "0x00000000000000000000000000000000f0e51002"),
+  owner: envAddress("DEMO_OWNER_ADDRESS", "0x00000000000000000000000000000000f0e51003"),
+  fresh: envAddress("DEMO_FRESH_ADDRESS", "0x00000000000000000000000000000000f0e51004"),
+  usdc: envAddress("ADDR_USDC", "0xE0BE08c77f415F577A1B3A9aD7a1Df1479564ec8"),
+  wphrs: envAddress("ADDR_WPHRS", "0x838800b758277CC111B2d48Ab01e5E164f8E9471"),
+  probe: envAddress("ADDR_PROBE", "0x00000000000000000000000000000000f0e51005"),
 } as const satisfies Record<string, Address>;
 
 export const contractLabels: Record<Address, ContractLabel> = {
@@ -51,6 +56,12 @@ export const contractLabels: Record<Address, ContractLabel> = {
     address: demoAddresses.moon,
     name: "MoonToken",
     verified: false,
+    deployedBlock: 23559002,
+  },
+  [demoAddresses.probe]: {
+    address: demoAddresses.probe,
+    name: "RoundTripProbe",
+    verified: true,
     deployedBlock: 23559002,
   },
 };
