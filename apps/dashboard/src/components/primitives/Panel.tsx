@@ -13,16 +13,14 @@ export function Panel({ title, right, children, accent = "none", className }: Pa
   return (
     <section
       className={cn(
-        "panel-edge min-h-0 overflow-hidden rounded border border-line-subtle bg-panel shadow-panel",
-        accent === "scan" && "border-l-2 border-l-scan shadow-scan",
-        accent === "critical" && "border-l-2 border-l-risk-critical shadow-critical",
+        "soft-panel min-h-0 overflow-hidden border-border transition-colors hover:border-border2",
+        accent === "scan" && "border-l-2 border-l-teal",
+        accent === "critical" && "border-l-2 border-l-red",
         className,
       )}
     >
-      <div className="flex h-8 items-center justify-between border-b border-line-subtle bg-elevated px-3">
-        <div className="font-display text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-tertiary">
-          {title}
-        </div>
+      <div className="flex h-12 items-center justify-between border-b border-border px-5">
+        <div className="font-sans text-[13px] font-semibold text-text2">{title}</div>
         {right}
       </div>
       {children}

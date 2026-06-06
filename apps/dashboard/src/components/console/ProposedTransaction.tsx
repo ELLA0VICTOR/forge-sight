@@ -1,4 +1,4 @@
-﻿import { LuArrowUpRight } from "react-icons/lu";
+﻿import { RiArrowRightUpLine } from "react-icons/ri";
 import type { ConsoleStep } from "@foresight/engine";
 import { truncAddr } from "../../lib/format";
 import { useForesightStore } from "../../store/useForesightStore";
@@ -11,17 +11,19 @@ export function ProposedTransaction({ tx }: { tx: NonNullable<ConsoleStep["tx"]>
   return (
     <div
       className={cn(
-        "mt-2 space-y-1 border border-line-subtle bg-inset p-3 font-mono text-[12px] text-ink-secondary",
-        scanning && "border-scan shadow-scan",
+        "mt-2 rounded-[14px] border border-border bg-bgDeep/35 p-3 font-mono text-[12px] font-normal tabular text-text2",
+        scanning && "border-violet bg-violet/10",
       )}
     >
-      <div className="flex items-center justify-between text-ink-tertiary">
-        <span>PROPOSED TX</span>
-        <LuArrowUpRight className="size-4" />
+      <div className="mb-2 flex items-center justify-between font-sans text-[12px] font-semibold text-text1">
+        <span>Proposed transaction</span>
+        <RiArrowRightUpLine className="size-4" />
       </div>
-      <div>to: {tx.contractName} ({truncAddr(tx.to)})</div>
-      <div>fn: {tx.functionName}(...)</div>
-      <div>value: {tx.valueLabel}</div>
+      <div className="grid gap-1">
+        <div>to: {tx.contractName} ({truncAddr(tx.to)})</div>
+        <div>fn: {tx.functionName}(...)</div>
+        <div>value: {tx.valueLabel}</div>
+      </div>
     </div>
   );
 }

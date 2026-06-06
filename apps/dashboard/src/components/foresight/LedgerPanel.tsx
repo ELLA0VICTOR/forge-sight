@@ -1,39 +1,60 @@
-import { motion } from "framer-motion";
-import { LuArrowRight } from "react-icons/lu";
+﻿import { motion } from "framer-motion";
+import { RiArrowDownLine, RiArrowUpLine } from "react-icons/ri";
 import type { BalanceDelta } from "@foresight/engine";
 import { ledgerContainer, ledgerRow } from "../../lib/motion";
 import { cn } from "../../lib/cn";
-import { Panel } from "../primitives/Panel";
+
+function DeltaAmount({ value }: { value: string }) {
+  const positive = value.startsWith("+") || (!value.startsWith("-") && Number(value) >= 0);
+  const Icon = positive ? RiArrowUpLine : RiArrowDownLine;
+  const display = value.startsWith("+") || value.startsWith("-") ? value : positive ? `+${value}` : value;
+
+  return (
+    <span className={cn("inline-flex items-center justify-end gap-1 font-mono text-[13px] font-semibold tabular", positive ? "text-green" : "text-red")}>
+      <Icon className="size-4" />
+      {display}
+    </span>
+  );
+}
+
+function LedgerSkeleton() {
+  return (
+    <section className="rounded-[16px] border border-border bg-bgDeep/30 p-5">
+      <div className="font-sans text-[13px] font-semibold text-text2">Balance changes</div>
+      <div className="mt-4 grid gap-3">
+        <div className="skeleton-line w-full" />
+        <div className="skeleton-line w-4/5" />
+      </div>
+    </section>
+  );
+}
 
 function LedgerRow({ delta }: { delta: BalanceDelta }) {
-  const positive = delta.delta.startsWith("+");
-
   return (
     <motion.div
       variants={ledgerRow}
-      className="grid grid-cols-[80px_1fr_18px_1fr_90px] items-center gap-2 border-b border-line-subtle px-3 py-2 font-mono text-[12px]"
+      className="grid min-h-12 grid-cols-[minmax(96px,1fr)_minmax(120px,auto)_minmax(72px,120px)] items-center gap-3 border-b border-border px-4 font-mono tabular transition-colors hover:border-border2"
     >
-      <span className="text-ink-primary">{delta.symbol}</span>
-      <span className="text-right text-ink-tertiary">{delta.before}</span>
-      <LuArrowRight className="text-ink-tertiary" />
-      <span className="text-right text-ink-primary">{delta.after}</span>
-      <span className={cn("text-right font-semibold", positive ? "text-pos" : "text-neg")}>{delta.delta}</span>
+      <span className="truncate text-[13px] font-semibold text-text1">{delta.symbol}</span>
+      <DeltaAmount value={delta.delta} />
+      <span className="justify-self-end text-[12px] font-normal text-text4">USD --</span>
     </motion.div>
   );
 }
 
 export function LedgerPanel({ deltas, visible }: { deltas: BalanceDelta[]; visible: boolean }) {
+  if (!visible) return <LedgerSkeleton />;
+
   return (
-    <Panel title="BALANCE CHANGES" className="min-h-[178px]">
-      {!visible ? (
-        <div className="p-4 text-sm text-ink-tertiary">Awaiting transaction.</div>
-      ) : (
-        <motion.div variants={ledgerContainer} initial="initial" animate="animate">
-          {deltas.map((delta) => (
-            <LedgerRow key={`${delta.symbol}-${delta.delta}`} delta={delta} />
-          ))}
-        </motion.div>
-      )}
-    </Panel>
+    <section className="overflow-hidden rounded-[16px] border border-border bg-bgDeep/30 transition-colors hover:border-border2">
+      <div className="border-b border-border px-5 py-4 font-sans text-[13px] font-semibold text-text2">
+        Balance changes
+      </div>
+      <motion.div variants={ledgerContainer} initial="initial" animate="animate">
+        {deltas.map((delta) => (
+          <LedgerRow key={`${delta.symbol}-${delta.delta}`} delta={delta} />
+        ))}
+      </motion.div>
+    </section>
   );
 }

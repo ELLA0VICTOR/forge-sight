@@ -1,14 +1,5 @@
-﻿import { AppShell } from "../../components/layout/AppShell";
+﻿import { LandingPage } from "../../components/landing/LandingPage";
 
-export default function CockpitPage({
-  searchParams,
-}: {
-  searchParams?: { scenario?: string; mode?: string };
-}) {
-  return (
-    <AppShell
-      initialScenario={searchParams?.scenario ?? "honeypot"}
-      initialMode={searchParams?.mode === "live" ? "live" : "demo"}
-    />
-  );
+export default function HomePage() {
+  return <LandingPage />;
 }

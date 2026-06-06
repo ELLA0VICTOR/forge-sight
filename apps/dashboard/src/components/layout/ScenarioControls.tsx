@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { LuRotateCcw } from "react-icons/lu";
+import { RiArrowRightUpLine, RiRefreshLine } from "react-icons/ri";
 import type { ScenarioScript } from "@foresight/engine";
 import { getScenario, scenarios } from "../../fixtures";
 import { cn } from "../../lib/cn";
@@ -19,35 +19,36 @@ export function ScenarioControls() {
 
   return (
     <div className="flex items-center gap-2">
-      <div className="hidden items-center gap-px border border-line-subtle bg-inset xl:flex">
+      <nav className="hidden items-center gap-1 rounded-full border border-border bg-surface/70 p-1 xl:flex" aria-label="Scenario">
         {scenarios.map((scenario) => (
           <button
             key={scenario.id}
             type="button"
             onClick={() => loadScenario(getScenario(scenario.id))}
             className={cn(
-              "relative h-8 px-3 font-display text-[10px] font-semibold text-ink-tertiary hover:text-ink-primary",
-              scenarioId === scenario.id && "text-ink-primary after:absolute after:inset-x-2 after:bottom-0 after:h-0.5 after:bg-scan",
+              "h-8 rounded-full px-3 font-sans text-[12px] font-semibold text-text3",
+              scenarioId === scenario.id ? "bg-surface3 text-text1" : "hover:text-text1",
             )}
           >
             {labels[scenario.id]}
           </button>
         ))}
-      </div>
+      </nav>
       <button
         type="button"
         onClick={player.play}
-        className="grid size-8 place-items-center border border-line-subtle bg-inset text-ink-tertiary hover:border-line-hot hover:text-ink-primary"
-        title="Replay"
+        className="grid size-10 place-items-center rounded-[14px] border border-border bg-surface text-text2 hover:border-border2 hover:text-text1"
+        title="Replay scenario"
       >
-        <LuRotateCcw className="size-4" />
+        <RiRefreshLine className="size-4" />
       </button>
       <button
         type="button"
         onClick={() => setMode(mode === "demo" ? "live" : "demo")}
-        className="h-8 border border-line-subtle bg-inset px-3 font-display text-[10px] font-semibold text-ink-secondary hover:border-line-hot"
+        className="inline-flex h-10 items-center gap-2 rounded-[14px] border border-button bg-button px-4 font-sans text-[14px] font-semibold text-buttonText hover:opacity-90"
       >
-        {mode === "demo" ? "DEMO" : "LIVE"}
+        {mode === "demo" ? "Demo" : "Live"}
+        <RiArrowRightUpLine className="size-4" />
       </button>
     </div>
   );

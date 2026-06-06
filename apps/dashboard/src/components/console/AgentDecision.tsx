@@ -8,18 +8,19 @@ export function AgentDecision({
   content: string;
 }) {
   const refused = decision === "refused";
+  const label = refused ? "Refused" : decision === "signed" ? "Signed" : "Diagnosis";
 
   return (
-    <div
-      className={cn(
-        "mt-2 border-l-2 bg-inset p-3",
-        refused ? "border-l-risk-critical shadow-critical" : "border-l-risk-safe",
-      )}
-    >
-      <div className={cn("font-display text-[12px] font-semibold", refused ? "text-risk-critical" : "text-risk-safe")}>
-        {refused ? "REFUSED" : decision === "signed" ? "SIGNED" : "DIAGNOSIS"}
-      </div>
-      <p className="mt-1 text-sm leading-6 text-ink-primary">{content}</p>
+    <div>
+      <span
+        className={cn(
+          "mb-2 inline-flex rounded-full px-2.5 py-1 font-sans text-[12px] font-semibold",
+          refused ? "bg-red text-bgDeep" : decision === "signed" ? "bg-green text-bgDeep" : "bg-teal text-bgDeep",
+        )}
+      >
+        {label}
+      </span>
+      <p className="font-sans text-[14px] leading-[1.6] text-text1">{content}</p>
     </div>
   );
 }

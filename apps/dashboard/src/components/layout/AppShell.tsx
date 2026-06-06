@@ -4,7 +4,6 @@ import { useEffect, useMemo } from "react";
 import { AgentConsole } from "../console/AgentConsole";
 import { ForesightPanel } from "../foresight/ForesightPanel";
 import { TelemetryLog } from "../footer/TelemetryLog";
-import { ScanlineOverlay } from "../primitives/ScanlineOverlay";
 import { TopBar } from "./TopBar";
 import { getScenario } from "../../fixtures";
 import { useScenarioPlayer } from "../../hooks/useScenarioPlayer";
@@ -30,16 +29,15 @@ export function AppShell({
   }, [initialMode, loadScenario, player.play, script, setMode]);
 
   return (
-    <main className="grid h-screen grid-rows-[56px_1fr_132px] bg-void text-ink-primary">
+    <main className="v12-shell grid h-screen grid-rows-[76px_minmax(0,1fr)_auto] overflow-hidden text-text1">
       <TopBar />
-      <div className="grid min-h-0 grid-cols-1 gap-px bg-line-subtle lg:grid-cols-[minmax(380px,38%)_1fr]">
-        <div className="min-h-0 bg-base p-3">
+      <section className="relative z-10 min-h-0 px-4 py-4 md:px-8">
+        <div className="workbench-frame mx-auto grid h-full max-w-[1536px] overflow-hidden rounded-[18px] border border-border lg:grid-cols-[minmax(320px,34%)_minmax(0,1fr)]">
           <AgentConsole />
+          <ForesightPanel />
         </div>
-        <ForesightPanel />
-      </div>
+      </section>
       <TelemetryLog />
-      <ScanlineOverlay />
     </main>
   );
 }

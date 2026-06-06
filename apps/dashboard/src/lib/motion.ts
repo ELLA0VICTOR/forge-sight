@@ -1,32 +1,49 @@
-﻿export const ledgerContainer = {
+﻿export const panelSequence = {
+  animate: { transition: { staggerChildren: 0.04 } },
+};
+
+export const panelFade = {
+  initial: { opacity: 0 },
+  animate: {
+    opacity: 1,
+    transition: { duration: 0.12, ease: "easeOut" },
+  },
+};
+
+export const ledgerContainer = {
   animate: { transition: { staggerChildren: 0.06 } },
 };
 
 export const ledgerRow = {
-  initial: { opacity: 0, x: -10, filter: "blur(3px)" },
+  initial: { opacity: 0 },
   animate: {
     opacity: 1,
-    x: 0,
-    filter: "blur(0px)",
-    transition: { duration: 0.28, ease: "easeOut" },
+    transition: { duration: 0.2, ease: "easeOut" },
   },
 };
 
-export const findingCard = {
-  initial: { opacity: 0, y: 10, scale: 0.99 },
+export const findingCard = ledgerRow;
+
+export const verdictRail = {
+  initial: { width: "0%" },
   animate: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: 0.26, ease: [0.16, 1, 0.3, 1] },
+    width: "100%",
+    transition: { duration: 0.3, ease: "easeOut" },
   },
 };
 
-export const verdictStamp = {
-  initial: { opacity: 0, scale: 0.96 },
+export const verdictContent = {
+  initial: { opacity: 0 },
   animate: {
     opacity: 1,
-    scale: 1,
-    transition: { type: "spring", stiffness: 520, damping: 30 },
+    transition: { duration: 0.12, delay: 0.12, ease: "easeOut" },
+  },
+};
+
+export const telemetryFade = {
+  initial: { opacity: 0 },
+  animate: {
+    opacity: 1,
+    transition: { duration: 0.08, ease: "easeOut" },
   },
 };

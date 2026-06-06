@@ -1,10 +1,18 @@
-﻿export function BrandMark({ size = 24 }: { size?: number }) {
+export function BrandMark({
+  size = 108,
+  className = "text-text1",
+}: {
+  size?: number;
+  className?: string;
+}) {
+  const height = Math.round(size * 0.38);
+
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path d="M12 2.5 20 7v10l-8 4.5L4 17V7z" stroke="var(--line-strong)" strokeWidth="1.25" />
-      <circle cx="12" cy="12" r="5" stroke="var(--text-secondary)" strokeWidth="1.25" />
-      <path d="M12 4.5v3M12 16.5v3M4.8 12h2.7M16.5 12h2.7" stroke="var(--text-tertiary)" strokeWidth="1.1" />
-      <circle cx="14.4" cy="9.6" r="1.5" fill="var(--scan)" />
+    <svg width={size} height={height} viewBox="0 0 180 68" fill="none" aria-hidden className={className}>
+      <path d="M12 56L26 10H96L90 25H43L40 34H82L77 48H36L32 56H12Z" fill="currentColor" />
+      <path d="M55 40L91 10H118L82 40H55Z" fill="currentColor" />
+      <path d="M87 24L99 10H166L158 27H111L108 34H158L147 56H69L77 39H128L131 33H87V24Z" fill="currentColor" />
+      <path d="M112 4L101 22H118L91 47L171 20H143L155 4H112Z" fill="currentColor" opacity="0.96" />
     </svg>
   );
 }

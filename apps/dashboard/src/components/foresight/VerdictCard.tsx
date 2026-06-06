@@ -1,35 +1,75 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
+import { RiShieldFlashLine, RiShieldLine } from "react-icons/ri";
 import type { Verdict } from "@foresight/engine";
-import { cn } from "../../lib/cn";
-import { verdictStamp } from "../../lib/motion";
+import { useCountUp } from "../../hooks/useCountUp";
+import { verdictContent, verdictRail } from "../../lib/motion";
 
-const decisionClass: Record<Verdict["decision"], string> = {
-  SIGN: "text-risk-safe border-l-risk-safe",
-  REVIEW: "text-risk-caution border-l-risk-caution",
-  DO_NOT_SIGN: "text-risk-critical border-l-risk-critical shadow-critical",
+const toneByDecision: Record<Verdict["decision"], { color: string; dim: string; label: string; severity: string; icon: typeof RiShieldLine }> = {
+  SIGN: {
+    color: "var(--green)",
+    dim: "var(--green-dim)",
+    label: "Safe to sign",
+    severity: "Low",
+    icon: RiShieldLine,
+  },
+  REVIEW: {
+    color: "var(--amber)",
+    dim: "var(--amber-dim)",
+    label: "Review required",
+    severity: "Medium",
+    icon: RiShieldLine,
+  },
+  DO_NOT_SIGN: {
+    color: "var(--red)",
+    dim: "var(--red-dim)",
+    label: "Do not sign",
+    severity: "Critical",
+    icon: RiShieldFlashLine,
+  },
 };
 
-export function VerdictCard({ verdict, visible }: { verdict?: Verdict | undefined; visible: boolean }) {
-  if (!verdict || !visible) {
-    return (
-      <div className="h-full border-l-2 border-l-line-strong bg-inset p-5 text-ink-tertiary">
-        Awaiting transaction.
+function VerdictSkeleton() {
+  return (
+    <div className="rounded-[14px] border border-border bg-bgDeep/30 p-4">
+      <div className="flex h-12 items-center gap-4">
+        <div className="skeleton-line w-7" />
+        <div className="skeleton-line w-44" />
+        <div className="ml-auto skeleton-line w-20" />
       </div>
-    );
-  }
+    </div>
+  );
+}
+
+export function VerdictCard({ verdict, visible }: { verdict?: Verdict | undefined; visible: boolean }) {
+  const active = Boolean(verdict && visible);
+  const displayScore = useCountUp(verdict?.score ?? 0, active, 800);
+
+  if (!verdict || !visible) return <VerdictSkeleton />;
+
+  const tone = toneByDecision[verdict.decision];
+  const Icon = tone.icon;
 
   return (
-    <motion.div
-      variants={verdictStamp}
-      initial="initial"
-      animate="animate"
-      className={cn("h-full border-l-2 bg-inset p-5", decisionClass[verdict.decision])}
-    >
-      <div className="font-display text-[28px] font-bold">
-        {verdict.decision === "DO_NOT_SIGN" ? "DO NOT SIGN" : verdict.decision}
+    <motion.div variants={verdictRail} initial="initial" animate="animate" className="overflow-hidden rounded-[14px]">
+      <div className="rounded-[14px] border border-border p-4" style={{ backgroundColor: tone.dim }}>
+        <motion.div variants={verdictContent} initial="initial" animate="animate" className="flex items-center gap-3">
+          <div className="grid size-9 shrink-0 place-items-center rounded-full border border-border bg-surface2">
+            <Icon className="size-5" style={{ color: tone.color }} />
+          </div>
+          <div className="min-w-0">
+            <div className="font-sans text-[22px] font-semibold leading-none text-text1">{tone.label}</div>
+            <div className="mt-1 font-mono text-[11px] uppercase tracking-[0.08em]" style={{ color: tone.color }}>
+              {tone.severity}
+            </div>
+          </div>
+          <div className="ml-auto rounded-[12px] border border-border bg-bgDeep/35 px-4 py-2 text-right">
+            <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-text4">risk</div>
+            <div className="font-mono text-[24px] font-semibold leading-none tabular" style={{ color: tone.color }}>
+              {displayScore}
+            </div>
+          </div>
+        </motion.div>
       </div>
-      <div className="mt-2 font-sans text-[15px] font-semibold text-ink-primary">{verdict.headline}</div>
-      <p className="mt-3 max-w-[52ch] text-[15px] leading-6 text-ink-secondary">{verdict.paragraph}</p>
     </motion.div>
   );
 }

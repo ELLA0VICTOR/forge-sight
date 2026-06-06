@@ -1,31 +1,32 @@
-import { LuCheck, LuX } from "react-icons/lu";
+﻿import { RiCheckLine, RiCloseLine } from "react-icons/ri";
 import type { RoundTripResult } from "@foresight/engine";
-import { Panel } from "../primitives/Panel";
+
+function Row({ label, value, danger = false }: { label: string; value: string; danger?: boolean }) {
+  const Icon = danger ? RiCloseLine : RiCheckLine;
+
+  return (
+    <div className="grid min-h-11 grid-cols-[1fr_auto] items-center border-b border-border px-5 font-mono text-[12px] font-normal tabular last:border-b-0">
+      <span className="text-text2">{label}</span>
+      <span className={danger ? "inline-flex items-center gap-1 text-red" : "inline-flex items-center gap-1 text-green"}>
+        <Icon className="size-4" />
+        {value}
+      </span>
+    </div>
+  );
+}
 
 export function RoundTripPanel({ roundTrip, visible }: { roundTrip?: RoundTripResult | undefined; visible: boolean }) {
   if (!roundTrip?.tested || !visible) return null;
 
   return (
-    <Panel title="ROUND-TRIP TEST" accent="critical">
-      <div className="grid gap-3 p-3">
-        <div className="grid grid-cols-2 gap-3">
-          <div className="border border-risk-safe bg-inset p-4">
-            <LuCheck className="mb-2 size-5 text-risk-safe" />
-            <div className="font-display text-sm font-semibold text-risk-safe">BUY SIMULATED</div>
-            <div className="mt-1 text-sm text-ink-secondary">Acquire MOON - succeeds</div>
-          </div>
-          <div className="border border-risk-critical bg-inset p-4 shadow-critical">
-            <LuX className="mb-2 size-5 text-risk-critical" />
-            <div className="font-display text-sm font-semibold text-risk-critical">SELL SIMULATED</div>
-            <div className="mt-1 text-sm text-ink-secondary">Reverts: {roundTrip.errorName}()</div>
-          </div>
-        </div>
-        <div className="grid gap-1 border border-line-subtle bg-inset p-3 font-mono text-[12px]">
-          <div className="grid grid-cols-2 text-ink-secondary"><span>as agent</span><span className="text-risk-critical">REVERTED</span></div>
-          <div className="grid grid-cols-2 text-ink-secondary"><span>as fresh wallet</span><span className="text-risk-critical">REVERTED</span></div>
-          <div className="grid grid-cols-2 text-risk-critical"><span>as token owner</span><span>OK - ASYMMETRIC</span></div>
-        </div>
+    <section className="overflow-hidden rounded-[16px] border border-border bg-bgDeep/30 transition-colors hover:border-border2">
+      <div className="border-b border-border px-5 py-4 font-sans text-[13px] font-semibold text-text2">
+        Round-trip sell test
       </div>
-    </Panel>
+      <Row label={`BUY ${roundTrip.tokenSymbol}`} value="OK" />
+      <Row label="SELL AS AGENT" value={`REVERTED ${roundTrip.errorName ?? ""}`.trim()} danger />
+      <Row label="SELL AS FRESH WALLET" value="REVERTED" danger />
+      <Row label="SELL AS TOKEN OWNER" value="OK - ASYMMETRIC" />
+    </section>
   );
 }
