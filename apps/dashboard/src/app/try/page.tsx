@@ -290,7 +290,7 @@ export default function TryPage() {
 
           <nav className="ml-auto hidden items-center gap-5 text-[13px] text-text3 md:flex">
             <Link href="/" className="hover:text-text1">
-              Landing
+              Back
             </Link>
             <a
               href="https://github.com/ELLA0VICTOR/foresight"
@@ -341,7 +341,7 @@ export default function TryPage() {
             className="ml-auto mb-3 inline-flex h-8 items-center gap-2 border border-border px-3 text-[12px] text-text3 hover:border-border2 hover:text-text1 md:hidden"
           >
             <RiArrowLeftLine className="size-4" />
-            Landing
+            Back
           </Link>
         </div>
       </header>
