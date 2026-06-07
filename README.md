@@ -16,10 +16,8 @@ The project ships as a terminal CLI, MCP skill server, HTTP API, and web dashboa
 - Chain ID: `688689`
 - RPC: `https://atlantic.dplabs-internal.com`
 - Explorer: `https://atlantic.pharosscan.xyz/`
-- Live demo URL: `<VERCEL_URL>`
-- Repository URL: `<GITHUB_URL>`
 
-Foresight already has real deployed demo contracts on Pharos Atlantic and a live honeypot round-trip probe:
+For testing, Foresight already has real deployed demo contracts on Pharos Atlantic and a live honeypot round-trip probe:
 
 | Contract | Address |
 | --- | --- |
@@ -296,6 +294,37 @@ The dashboard includes:
 
 The visual demo can run without a backend because it reads generated fixtures. This keeps the public demo smooth and reliable. The real skill logic remains in `@foresight/engine` and is used by CLI, MCP, and HTTP server.
 
+### Deploy The Dashboard On Vercel
+
+Recommended Vercel project settings:
+
+```text
+Framework Preset: Next.js
+Root Directory: apps/dashboard
+Install Command: corepack pnpm install --frozen-lockfile
+Build Command: corepack pnpm build
+Output Directory: .next
+```
+
+Environment variables to add in Vercel:
+
+```env
+PHAROS_NETWORK_NAME=atlantic-testnet
+PHAROS_RPC_URL=https://atlantic.dplabs-internal.com
+PHAROS_CHAIN_ID=688689
+PHAROS_NATIVE_SYMBOL=PHRS
+PHAROS_EXPLORER_URL=https://atlantic.pharosscan.xyz/
+
+DEMO_AGENT_ADDRESS=0xa1b2000000000000000000000000000000000001
+ADDR_USDC=0x5420f2D7c9219FD6E7d44b571762D1aa4824cDFc
+ADDR_WPHRS=0x6C21fA4468d4bCd05FCb628addF187574C84fAAC
+ADDR_MOON=0xCE26F3e00AE932C420A30E52A93bb141C543ECdf
+ADDR_ROUTER=0x4d7C3EF2d8553F9502b7EcbAB056F1981C89BadA
+ADDR_PROBE=0x4d7c79F36EFD1E78f986B8E422312Be2e7D0Fc83
+```
+
+Do not add `DEPLOYER_PK` to Vercel. It is only for local testnet contract redeploys.
+
 ## HTTP Server
 
 Run the server:
@@ -503,10 +532,10 @@ calldata and simulated reverts, checks deployed contract bytecode, runs a live
 honeypot round-trip probe, scores risk, and returns SIGN / REVIEW / DO_NOT_SIGN.
 
 GitHub:
-<GITHUB_URL>
+https://github.com/ELLA0VICTOR/foresight
 
 Demo:
-<VERCEL_URL>/try
+Add the deployed Vercel /try URL after deployment.
 
 How to use:
 1. Install dependencies with corepack pnpm install.
@@ -527,5 +556,5 @@ The CLI/MCP/API path is live RPC-backed. Dashboard replay fixtures are included
 for polished visual demos and deterministic tests.
 
 Email:
-<EMAIL>
+Add your submission email.
 ```
