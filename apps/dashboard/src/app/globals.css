@@ -273,10 +273,10 @@ summary {
   justify-content: center;
   gap: 8px;
   border-radius: 12px;
-  border: 1px solid rgba(187,182,195,0.5);
-  background: rgba(18,17,22,0.31);
+  border: 1px solid color-mix(in srgb, var(--text-2) 46%, transparent);
+  background: color-mix(in srgb, var(--bg-deep) 72%, transparent);
   padding: 0 28px;
-  color: rgba(187,182,195,0.68);
+  color: color-mix(in srgb, var(--text-2) 82%, var(--text-1) 18%);
   font-family: var(--font-sans), sans-serif;
   font-size: 21px;
   font-weight: 500;
