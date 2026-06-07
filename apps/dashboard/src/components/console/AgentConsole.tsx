@@ -21,13 +21,13 @@ export function AgentConsole() {
 
   return (
     <Panel
-      title="Agent flow"
+      title="Agent console"
       className="h-full border-r border-border bg-surface/70"
       right={
         <button
           type="button"
           onClick={player.play}
-          className="inline-flex h-8 items-center gap-2 rounded-[10px] border border-border px-3 font-sans text-[12px] font-semibold text-text3 hover:border-border2 hover:text-text1"
+          className="inline-flex h-8 items-center gap-2 rounded-[9px] border border-border px-3 font-sans text-[12px] font-normal text-text3 hover:border-border2 hover:text-text1"
         >
           <RiRefreshLine className="size-4" />
           Replay
@@ -41,8 +41,8 @@ export function AgentConsole() {
             type="button"
             onClick={() => loadScenario(getScenario(scenario.id))}
             className={cn(
-              "h-11 border-r border-border font-sans text-[13px] font-semibold last:border-r-0",
-              scenarioId === scenario.id ? "bg-surface2 text-text1" : "text-text4 hover:text-text2",
+              "h-10 border-r border-border font-mono text-[10px] uppercase tracking-[0.08em] last:border-r-0",
+              scenarioId === scenario.id ? "bg-surface2/70 text-text1" : "text-text4 hover:text-text2",
             )}
           >
             {labels[scenario.id]}

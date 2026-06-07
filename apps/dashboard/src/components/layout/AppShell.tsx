@@ -4,6 +4,7 @@ import { useEffect, useMemo } from "react";
 import { AgentConsole } from "../console/AgentConsole";
 import { ForesightPanel } from "../foresight/ForesightPanel";
 import { TelemetryLog } from "../footer/TelemetryLog";
+import { ProofStrip } from "./ProofStrip";
 import { TopBar } from "./TopBar";
 import { getScenario } from "../../fixtures";
 import { useScenarioPlayer } from "../../hooks/useScenarioPlayer";
@@ -29,10 +30,11 @@ export function AppShell({
   }, [initialMode, loadScenario, player.play, script, setMode]);
 
   return (
-    <main className="v12-shell grid h-screen grid-rows-[76px_minmax(0,1fr)_auto] overflow-hidden text-text1">
+    <main className="v12-shell grid h-screen grid-rows-[68px_auto_minmax(0,1fr)_auto] overflow-hidden text-text1">
       <TopBar />
-      <section className="relative z-10 min-h-0 px-4 py-4 md:px-8">
-        <div className="workbench-frame mx-auto grid h-full max-w-[1536px] overflow-hidden rounded-[18px] border border-border lg:grid-cols-[minmax(320px,34%)_minmax(0,1fr)]">
+      <ProofStrip />
+      <section className="relative z-10 min-h-0 px-4 py-3 md:px-8">
+        <div className="workbench-frame mx-auto grid h-full max-w-[1536px] overflow-hidden rounded-[16px] border border-border lg:grid-cols-[minmax(320px,34%)_minmax(0,1fr)]">
           <AgentConsole />
           <ForesightPanel />
         </div>

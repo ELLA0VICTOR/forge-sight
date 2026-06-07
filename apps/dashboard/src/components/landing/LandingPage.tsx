@@ -2,13 +2,9 @@ import Link from "next/link";
 import {
   RiArrowRightUpLine,
   RiCheckboxCircleLine,
-  RiDownloadLine,
   RiFileList3Line,
   RiGitBranchLine,
-  RiInformationLine,
-  RiSearchLine,
   RiShieldFlashLine,
-  RiTeamLine,
 } from "react-icons/ri";
 import { BrandMark } from "../icons/BrandMark";
 import { FallingActionStage } from "./FallingActionStage";
@@ -18,125 +14,65 @@ function LandingNav() {
     <header className="relative z-10 mx-auto flex h-[104px] w-full max-w-[1536px] items-center justify-between px-6 md:px-10">
       <BrandMark size={110} />
       <Link
-        href="/demo?scenario=honeypot"
+        href="/try"
         className="inline-flex h-10 items-center gap-2 rounded-[13px] bg-button px-4 font-sans text-[14px] font-medium text-buttonText hover:opacity-90"
       >
-        Demo
+        Try now
         <RiArrowRightUpLine className="size-4" />
       </Link>
     </header>
   );
 }
 
-function SeverityDot({ value, tone }: { value: string; tone: "red" | "amber" | "muted" }) {
-  const color = tone === "red" ? "bg-red text-bgDeep" : tone === "amber" ? "bg-amber text-bgDeep" : "bg-surface3 text-text3";
-
-  return <span className={`grid size-6 place-items-center rounded-full font-mono text-[11px] ${color}`}>{value}</span>;
-}
-
 function FindingPreview() {
-  const groups = [
-    { title: "Router swap can trap the agent balance", counts: ["4", "1"] },
-    { title: "Sell path reverts for non-owner wallets", counts: ["4", "2", "1"], open: true },
-  ];
-
-  const findings = [
-    ["H", "F-034", "SellBlocked triggers during round-trip exit", "Valid"],
-    ["H", "F-035", "trapped[agent] changes from false to true", "Valid"],
-    ["M", "F-036", "New token contract deployed inside review window", "Review"],
-    ["M", "F-037", "Value at risk exceeds configured agent threshold", "Review"],
-    ["L", "F-038", "Router ABI is locally recognized", "Valid"],
-  ];
-
   return (
-    <div className="landing-preview-mask mx-auto mt-16 max-w-[1260px] overflow-hidden rounded-[20px] border border-border bg-surface/70">
-      <div className="grid min-h-[500px] lg:grid-cols-[76px_minmax(0,1.15fr)_minmax(360px,0.85fr)]">
-        <aside className="hidden border-r border-border bg-bgDeep/30 px-3 py-5 lg:block">
-          <BrandMark size={42} />
-          <div className="mt-6 grid gap-3">
-            <button className="grid size-10 place-items-center rounded-[12px] border border-border text-text3" type="button">+</button>
-            <div className="grid gap-1 pt-8 text-center text-text3">
-              <RiGitBranchLine className="mx-auto size-5" />
-              <span className="font-sans text-[11px]">Runs</span>
-            </div>
-            <div className="grid gap-1 pt-4 text-center text-text4">
-              <RiFileList3Line className="mx-auto size-5" />
-              <span className="font-sans text-[11px]">Trace</span>
-            </div>
-          </div>
-        </aside>
+    <div
+      className="landing-preview-mask mx-auto mt-14 w-full max-w-[860px] overflow-hidden rounded-[6px] border border-white/[0.07] bg-black text-left"
+      style={{ fontFamily: "var(--font-mono), monospace" }}
+    >
+      <div className="flex items-center gap-1.5 border-b border-white/5 px-4 py-2.5">
+        <div className="size-2.5 rounded-full bg-[#FF5F57]" />
+        <div className="size-2.5 rounded-full bg-[#FEBC2E]" />
+        <div className="size-2.5 rounded-full bg-[#28C840]" />
+        <span className="ml-auto font-mono text-[10px] uppercase tracking-[0.14em] text-white/15">
+          Foresight - Skill Demo
+        </span>
+      </div>
 
-        <section className="border-r border-border">
-          <div className="flex h-14 items-center justify-between border-b border-border px-5">
-            <span className="font-sans text-[13px] text-text2">Runs / pre-flight</span>
-            <div className="hidden items-center gap-2 text-text3 sm:flex">
-              <RiInformationLine className="size-4" />
-              <RiTeamLine className="size-4" />
-              <span className="inline-flex items-center gap-1 rounded-[8px] border border-border px-2 py-1 font-sans text-[12px]">
-                <RiDownloadLine className="size-3.5" />
-                Export
-              </span>
-            </div>
+      <div className="px-5 py-[18px]">
+        <div className="mb-3.5 font-mono text-[11px] leading-[1.7] text-white/30">
+          <div>
+            <span className="text-green">*</span> Skill(audit)
           </div>
+          <div className="pl-3.5">└ Successfully loaded skill</div>
+          <div>
+            <span className="text-teal">$</span> foresight skill demo honeypot --live
+          </div>
+        </div>
 
-          <div className="flex flex-wrap gap-2 border-b border-border px-5 py-3">
-            <span className="inline-flex h-8 items-center rounded-full border border-border px-3 font-sans text-[12px] text-text3">Severity</span>
-            <span className="inline-flex h-8 items-center rounded-full border border-border px-3 font-sans text-[12px] text-text3">Validity</span>
-            <span className="inline-flex h-8 min-w-[220px] items-center gap-2 rounded-full border border-border px-3 font-sans text-[12px] text-text3">
-              <RiSearchLine className="size-4" />
-              title, ID
-            </span>
-            <span className="inline-flex h-8 items-center rounded-full border border-border px-3 font-sans text-[12px] font-semibold text-text2">Most severe</span>
-          </div>
+        <div
+          className="mb-3.5 whitespace-nowrap leading-none text-teal"
+          style={{
+            fontFamily: "var(--font-vt323), monospace",
+            fontSize: "clamp(44px, 6.5vw, 76px)",
+            letterSpacing: "0.04em",
+          }}
+        >
+          FORESIGHT SKILL
+        </div>
 
-          {groups.map((group) => (
-            <div key={group.title} className={group.open ? "border-b border-border bg-surface3/45" : "border-b border-border"}>
-              <div className="grid min-h-[52px] grid-cols-[22px_1fr_auto] items-center gap-3 px-5">
-                <span className="size-4 rounded border border-border2" />
-                <span className="truncate font-sans text-[14px] text-text2">{group.title}</span>
-                <span className="flex items-center gap-1.5">
-                  {group.counts.map((count, index) => (
-                    <SeverityDot key={`${group.title}-${count}-${index}`} value={count} tone={index === 0 ? "red" : index === 1 ? "amber" : "muted"} />
-                  ))}
-                </span>
-              </div>
-            </div>
-          ))}
-
-          {findings.map(([level, id, title, status], index) => (
-            <div
-              key={title}
-              className={index === 2 ? "grid min-h-[48px] grid-cols-[28px_48px_1fr_92px] items-center gap-3 border-b border-violet bg-violet/10 px-5" : "grid min-h-[48px] grid-cols-[28px_48px_1fr_92px] items-center gap-3 border-b border-border px-5"}
-            >
-              <span className={level === "H" ? "grid size-6 place-items-center rounded-full bg-red/80 font-sans text-[12px] text-bgDeep" : level === "M" ? "grid size-6 place-items-center rounded-full bg-amber/80 font-sans text-[12px] text-bgDeep" : "grid size-6 place-items-center rounded-full bg-surface3 font-sans text-[12px] text-text3"}>
-                {level}
-              </span>
-              <span className="font-mono text-[11px] text-text4">{id}</span>
-              <span className="truncate font-sans text-[13px] text-text2">{title}</span>
-              <span className="text-right font-mono text-[11px] text-text3">{status}</span>
-            </div>
-          ))}
-        </section>
-
-        <section className="bg-bgDeep/28 p-5">
-          <div className="grid grid-cols-2 rounded-[10px] border border-border p-1 font-mono text-[11px]">
-            <span className="rounded-[8px] bg-surface3 py-2 text-center text-green">Valid</span>
-            <span className="py-2 text-center text-red">Invalid</span>
+        <div className="font-mono text-[11px] leading-[1.7] text-white/30">
+          <div>
+            <span className="text-green">Mode:</span> live Pharos RPC · target SimpleRouter.swap
           </div>
-          <div className="mt-7">
-            <h3 className="font-sans text-[18px] font-semibold leading-tight text-text1">SellBlocked triggers during round-trip exit</h3>
-            <span className="mt-3 inline-flex rounded-full bg-red px-2.5 py-1 font-sans text-[12px] font-semibold text-bgDeep">High risk</span>
-            <p className="mt-5 rounded-[10px] bg-surface3/55 p-3 font-sans text-[13px] leading-[1.55] text-text2">
-              The token can be bought, but simulated sells from normal wallets revert while the owner can exit.
-            </p>
+          <div>
+            <span className="text-green">Proof:</span> buy MOON ok · non-owner exit reverted SellBlocked · owner exit ok
           </div>
-          <div className="mt-6 border-t border-border pt-5">
-            <div className="font-sans text-[15px] font-semibold text-text2">Impact</div>
-            <p className="mt-3 font-sans text-[13px] leading-[1.7] text-text3">
-              Signing would move value into a position the agent cannot unwind.
-            </p>
+          <div>
+            <span className="text-red">Verdict:</span> <span className="text-white/80">DO_NOT_SIGN</span> ·{" "}
+            <span className="text-red">Risk:</span> <span className="text-white/80">100 / CRITICAL</span>
           </div>
-        </section>
+        </div>
       </div>
     </div>
   );
@@ -350,10 +286,10 @@ export function LandingPage() {
             <span className="pointer-events-none absolute left-1/2 top-[55%] z-10 h-px w-[72%] -translate-x-1/2 -translate-y-1/2 rotate-3 bg-red" />
           </div>
           <Link
-            href="/demo?scenario=honeypot"
-            className="flex min-h-11 w-fit items-center justify-center gap-2 rounded-lg border border-button bg-button px-5 py-3 font-sans text-base font-normal leading-5 tracking-[-0.025em] text-buttonText hover:opacity-90 sm:min-h-12 sm:px-6 sm:text-lg sm:leading-[1.375rem] max-[400px]:w-full"
+            href="/try"
+            className="flex min-h-11 w-fit items-center justify-center gap-2 rounded-lg border border-button bg-button px-5 py-3 font-sans text-base font-normal leading-5 tracking-[-0.025em] text-buttonText hover:opacity-90 max-[400px]:w-full"
           >
-            Run pre-flight
+            Try now
             <RiArrowRightUpLine className="size-4" />
           </Link>
         </div>

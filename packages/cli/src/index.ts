@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import "dotenv/config";
+import "./loadEnv.js";
 
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -29,7 +29,10 @@ import {
   simulate,
   unlimitedApprovalTx,
   type Address,
+  type DiagnoseReport,
+  type Finding,
   type Hex,
+  type SimReport,
   type TxRequest,
 } from "@foresight/engine";
 
@@ -77,11 +80,47 @@ type DeploymentResult = {
   };
 };
 
+const ansi = {
+  reset: "\x1b[0m",
+  bold: "\x1b[1m",
+  dim: "\x1b[2m",
+  cyan: "\x1b[36m",
+  green: "\x1b[32m",
+  red: "\x1b[31m",
+  amber: "\x1b[33m",
+};
+
+const useColor = process.env.NO_COLOR !== "1";
+
+function paint(value: string, color: keyof typeof ansi) {
+  if (!useColor) return value;
+  return `${ansi[color]}${value}${ansi.reset}`;
+}
+
+const foresightBanner = String.raw`
+███████╗ ██████╗ ██████╗ ███████╗███████╗██╗ ██████╗ ██╗  ██╗████████╗
+██╔════╝██╔═══██╗██╔══██╗██╔════╝██╔════╝██║██╔════╝ ██║  ██║╚══██╔══╝
+█████╗  ██║   ██║██████╔╝█████╗  ███████╗██║██║  ███╗███████║   ██║
+██╔══╝  ██║   ██║██╔══██╗██╔══╝  ╚════██║██║██║   ██║██╔══██║   ██║
+██║     ╚██████╔╝██║  ██║███████╗███████║██║╚██████╔╝██║  ██║   ██║
+╚═╝      ╚═════╝ ╚═╝  ╚═╝╚══════╝╚══════╝╚═╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝`;
+
+function printSkillBanner() {
+  console.log(paint(foresightBanner, "cyan"));
+  console.log(paint("FORESIGHT SKILL", "bold"));
+  console.log(paint("Pharos pre-flight safety layer", "dim"));
+  console.log("");
+}
+
 function usage() {
   return `
 Foresight CLI
 
 Usage:
+  foresight skill install
+  foresight skill demo [happy-path|honeypot|approval] [--live|--fixture] [--json]
+  foresight skill check --from 0x... --to 0x... --data 0x... [--value wei] [--mode live|fixture] [--json]
+  foresight skill diagnose --tx 0x... [--json]
   foresight simulate --from 0x... --to 0x... --data 0x... [--value wei] [--mode live|fixture] [--json]
   foresight simulate --scenario honeypot [--mode fixture|live] [--json]
   foresight assess-risk --from 0x... --to 0x... --data 0x... [--value wei] [--mode live|fixture] [--json]
@@ -93,6 +132,9 @@ Usage:
   foresight health
 
 Examples:
+  foresight skill install
+  foresight skill demo honeypot --live
+  foresight skill check --from 0xabc... --to 0xdef... --data 0x --mode live
   foresight demo-tx --scenario honeypot --json
   foresight simulate --scenario honeypot --mode fixture
   foresight simulate --from 0xabc... --to 0xdef... --data 0x --mode live
@@ -102,6 +144,10 @@ Examples:
 
 function parse(argv: string[]) {
   const [command, ...rest] = argv;
+  return { command, flags: parseFlagList(rest) };
+}
+
+function parseFlagList(rest: string[]) {
   const flags: Flags = {};
 
   for (let index = 0; index < rest.length; index += 1) {
@@ -122,7 +168,7 @@ function parse(argv: string[]) {
     index += 1;
   }
 
-  return { command, flags };
+  return flags;
 }
 
 function flag(flags: Flags, name: string): string | undefined {
@@ -287,6 +333,224 @@ function runHealth(flags: Flags) {
   console.log(`chainId: ${payload.chainId}`);
   console.log(`rpc: ${payload.rpcUrl}`);
   console.log(`default simulation mode: ${payload.mode}`);
+}
+
+function skillUsage() {
+  return `
+Foresight Skill
+
+Usage:
+  foresight skill install
+  foresight skill demo [happy-path|honeypot|approval|autopsy] [--live|--fixture] [--json]
+  foresight skill check --from 0x... --to 0x... --data 0x... [--value wei] [--mode live|fixture] [--json]
+  foresight skill diagnose --tx 0x... [--json]
+
+Real live demo:
+  foresight skill demo honeypot --live
+
+Agent rule:
+  Before any AI agent signs a Pharos write transaction, call foresight_assess_risk.
+  Sign only when the verdict is SIGN.
+`;
+}
+
+function normalizeSkillMode(flags: Flags, defaultMode: SimMode = "live") {
+  if (has(flags, "live") && has(flags, "fixture")) {
+    throw new Error("Use only one of --live or --fixture");
+  }
+
+  if (has(flags, "live")) flags.mode = "live";
+  if (has(flags, "fixture")) flags.mode = "fixture";
+  if (!flag(flags, "mode")) flags.mode = defaultMode;
+
+  return parseMode(flags) ?? defaultMode;
+}
+
+function colorForFinding(finding: Finding): keyof typeof ansi {
+  switch (finding.severity) {
+    case "CRITICAL":
+    case "HIGH":
+      return "red";
+    case "MEDIUM":
+      return "amber";
+    default:
+      return "green";
+  }
+}
+
+function colorForDecision(decision: SimReport["verdict"]["decision"]): keyof typeof ansi {
+  switch (decision) {
+    case "SIGN":
+      return "green";
+    case "REVIEW":
+      return "amber";
+    case "DO_NOT_SIGN":
+      return "red";
+  }
+}
+
+function statusLine(label: string, value: string, color: keyof typeof ansi = "cyan") {
+  console.log(`${paint("●", color)} ${paint(label.padEnd(16), "dim")} ${value}`);
+}
+
+function printSkillReport(report: SimReport, input: { mode: SimMode; label: string }) {
+  const decisionColor = colorForDecision(report.verdict.decision);
+
+  printSkillBanner();
+  statusLine("Skill loaded", input.label);
+  statusLine("Mode", `${input.mode} Pharos RPC`, input.mode === "live" ? "green" : "amber");
+  statusLine("Network", `${report.network.name} / ${report.network.chainId}`);
+  statusLine("Target", `${report.decoded.contractName}.${report.decoded.functionName}`);
+  console.log("");
+  console.log(`${paint("VERDICT", "bold")}  ${paint(report.verdict.decision, decisionColor)}`);
+  console.log(`${paint("RISK", "bold")}     ${paint(`${report.verdict.score} / ${report.verdict.band}`, decisionColor)}`);
+  console.log("");
+  console.log(report.verdict.paragraph);
+
+  if (report.roundTrip?.tested) {
+    console.log("");
+    console.log(paint("ROUND-TRIP EXIT PROOF", "bold"));
+    console.log(`  buy ${report.roundTrip.tokenSymbol}:          ${paint(report.roundTrip.buy.toUpperCase(), "green")}`);
+    console.log(
+      `  non-owner exit:      ${paint(report.roundTrip.sellAsAgent.toUpperCase(), report.roundTrip.sellAsAgent === "reverted" ? "red" : "green")}${
+        report.roundTrip.errorName ? ` (${report.roundTrip.errorName})` : ""
+      }`,
+    );
+    console.log(
+      `  token owner exit:    ${paint(report.roundTrip.sellAsOwner.toUpperCase(), report.roundTrip.sellAsOwner === "ok" ? "green" : "red")}`,
+    );
+  }
+
+  console.log("");
+  console.log(paint(`FINDINGS (${report.findings.length})`, "bold"));
+  for (const [index, finding] of report.findings.entries()) {
+    const severity = paint(finding.severity.padEnd(8), colorForFinding(finding));
+    console.log(`  ${String(index + 1).padStart(2, "0")}  ${severity} ${finding.title}`);
+    console.log(`      ${paint(finding.detail, "dim")}`);
+  }
+}
+
+function printSkillDiagnosis(report: DiagnoseReport) {
+  printSkillBanner();
+  statusLine("Skill loaded", "foresight_diagnose");
+  statusLine("Mode", "live Pharos RPC", "green");
+  statusLine("Network", `${report.network.name} / ${report.network.chainId}`);
+  statusLine("Tx hash", report.txHash);
+  console.log("");
+  console.log(`${paint("REVERT", "bold")}   ${paint(report.errorName, "red")}`);
+  console.log(`${paint("FRAME", "bold")}    ${report.revertingFrame}`);
+  console.log("");
+  console.log(paint("ROOT CAUSE", "bold"));
+  console.log(report.rootCause);
+  console.log("");
+  console.log(paint("SUGGESTED FIX", "bold"));
+  console.log(report.fix.summary);
+}
+
+async function runSkillCheck(flags: Flags, label = "foresight_assess_risk") {
+  const mode = normalizeSkillMode(flags);
+  const tx = txFromFlags(flags);
+  const report = await simulate(tx, {
+    mode,
+    allowFixtureFallback: has(flags, "allow-fixture-fallback"),
+  });
+
+  if (has(flags, "json")) {
+    printJson({
+      skill: label,
+      mode,
+      verdict: report.verdict,
+      findings: report.findings,
+      roundTrip: report.roundTrip,
+    });
+    return;
+  }
+
+  printSkillReport(report, { mode, label });
+}
+
+async function runSkillDiagnose(flags: Flags) {
+  const txHash = flag(flags, "tx") ?? (has(flags, "demo") ? demoFailedTxHash : undefined);
+  if (!txHash) {
+    throw new Error("Missing required --tx. Use --demo for the bundled failed transaction example.");
+  }
+
+  const report = await diagnose(txHash as Hex);
+
+  if (has(flags, "json")) {
+    printJson({ skill: "foresight_diagnose", report });
+    return;
+  }
+
+  printSkillDiagnosis(report);
+}
+
+function runSkillInstall(flags: Flags) {
+  if (has(flags, "json")) {
+    printJson({
+      skill: "foresight",
+      cli: "foresight skill check",
+      mcp: "foresight_assess_risk",
+      network: networkConfig.name,
+      chainId: networkConfig.chainId,
+    });
+    return;
+  }
+
+  printSkillBanner();
+  statusLine("Skill", "foresight");
+  statusLine("CLI", "foresight skill check");
+  statusLine("MCP tool", "foresight_assess_risk");
+  statusLine("Network", `${networkConfig.name} / ${networkConfig.chainId}`);
+  console.log("");
+  console.log(paint("Local install", "bold"));
+  console.log("  corepack pnpm install");
+  console.log("  corepack pnpm --filter @foresight/cli build");
+  console.log("");
+  console.log(paint("Run the real live demo", "bold"));
+  console.log("  corepack pnpm --filter @foresight/cli dev -- skill demo honeypot --live");
+  console.log("");
+  console.log(paint("Agent guardrail", "bold"));
+  console.log("  Before signing any Pharos write transaction, call foresight_assess_risk.");
+}
+
+async function runSkill(argv: string[]) {
+  const [action = "help", maybeScenario, ...rest] = argv;
+
+  if (action === "help" || action === "--help" || action === "-h") {
+    console.log(skillUsage());
+    return;
+  }
+
+  switch (action) {
+    case "install":
+      runSkillInstall(parseFlagList(argv.slice(1)));
+      return;
+    case "check":
+    case "assess-risk":
+      await runSkillCheck(parseFlagList(argv.slice(1)));
+      return;
+    case "diagnose":
+      await runSkillDiagnose(parseFlagList(argv.slice(1)));
+      return;
+    case "demo": {
+      const scenario = maybeScenario && !maybeScenario.startsWith("--") ? maybeScenario : "honeypot";
+      const flagArgs = scenario === maybeScenario ? rest : argv.slice(1);
+      const flags = parseFlagList(flagArgs);
+
+      if (scenario === "autopsy") {
+        flags.tx = demoFailedTxHash;
+        await runSkillDiagnose(flags);
+        return;
+      }
+
+      flags.scenario = scenario;
+      await runSkillCheck(flags, "foresight_assess_risk");
+      return;
+    }
+    default:
+      throw new Error(`Unknown skill command: ${action}`);
+  }
 }
 
 function contractsDir() {
@@ -700,6 +964,12 @@ async function runDeployDemo(flags: Flags) {
 
 async function main() {
   const argv = process.argv.slice(2).filter((arg, index) => !(index === 0 && arg === "--"));
+
+  if (argv[0] === "skill") {
+    await runSkill(argv.slice(1));
+    return;
+  }
+
   const { command, flags } = parse(argv);
 
   if (!command || command === "help" || command === "--help" || command === "-h") {

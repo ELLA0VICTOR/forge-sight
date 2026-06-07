@@ -204,6 +204,12 @@ Health check:
 corepack pnpm --filter @foresight/cli dev -- health
 ```
 
+Show the local skill install banner:
+
+```bash
+corepack pnpm --filter @foresight/cli dev -- skill install
+```
+
 Generate a sample honeypot transaction:
 
 ```bash
@@ -213,19 +219,29 @@ corepack pnpm --filter @foresight/cli dev -- demo-tx --scenario honeypot --json
 Run the real live honeypot pre-flight:
 
 ```bash
-corepack pnpm --filter @foresight/cli dev -- assess-risk --scenario honeypot --mode live
+corepack pnpm --filter @foresight/cli dev -- skill demo honeypot --live
 ```
 
 Expected result:
 
 ```text
-DECISION: DO_NOT_SIGN
-RISK: 100 (CRITICAL)
+FORESIGHT SKILL
+Mode: live Pharos RPC
+Target: SimpleRouter.swap
 
-Findings:
-- [CRITICAL] Honeypot detected
-- [MEDIUM] Large value exposure
-- [INFO] Live RPC pre-flight completed
+VERDICT  DO_NOT_SIGN
+RISK     100 / CRITICAL
+
+ROUND-TRIP EXIT PROOF
+  buy MOON:       OK
+  non-owner exit: REVERTED (SellBlocked)
+  owner exit:     OK
+```
+
+Check any real proposed transaction:
+
+```bash
+corepack pnpm --filter @foresight/cli dev -- skill check --from <agent> --to <contract> --data <calldata> --value <wei> --mode live
 ```
 
 Get the full JSON report:
@@ -249,7 +265,7 @@ corepack pnpm --filter @foresight/cli dev -- explain --to <target> --data <calld
 Diagnose a failed transaction:
 
 ```bash
-corepack pnpm --filter @foresight/cli dev -- diagnose --tx <txHash>
+corepack pnpm --filter @foresight/cli dev -- skill diagnose --tx <txHash>
 ```
 
 ## Web Dashboard
@@ -264,6 +280,7 @@ Routes:
 
 ```text
 /       landing page
+/try    real CLI/MCP skill instructions
 /demo   dashboard replay experience
 ```
 
@@ -432,8 +449,8 @@ Terminal demo:
 ```bash
 corepack pnpm install
 Copy-Item .env.example .env
-corepack pnpm --filter @foresight/cli dev -- health
-corepack pnpm --filter @foresight/cli dev -- assess-risk --scenario honeypot --mode live
+corepack pnpm --filter @foresight/cli dev -- skill install
+corepack pnpm --filter @foresight/cli dev -- skill demo honeypot --live
 corepack pnpm --filter @foresight/cli dev -- simulate --scenario honeypot --mode live --json
 ```
 
@@ -447,7 +464,7 @@ Open:
 
 ```text
 http://localhost:3000/
-http://localhost:3000/demo?scenario=honeypot
+http://localhost:3000/try
 ```
 
 If port `3000` is busy, Next.js may choose another port.
@@ -489,13 +506,14 @@ GitHub:
 <GITHUB_URL>
 
 Demo:
-<VERCEL_URL>
+<VERCEL_URL>/try
 
 How to use:
 1. Install dependencies with corepack pnpm install.
 2. Copy .env.example to .env.
-3. Run corepack pnpm --filter @foresight/cli dev -- assess-risk --scenario honeypot --mode live.
-4. Optional: run the dashboard with corepack pnpm dev.
+3. Run corepack pnpm --filter @foresight/cli dev -- skill install.
+4. Run corepack pnpm --filter @foresight/cli dev -- skill demo honeypot --live.
+5. Optional: run the Try page with corepack pnpm dev and open /try.
 
 Supported framework:
 CLI, MCP server, HTTP API, markdown skill bundle. Compatible with agent workflows

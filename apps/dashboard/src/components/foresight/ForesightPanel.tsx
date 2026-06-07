@@ -20,11 +20,21 @@ export function ForesightPanel() {
 
   return (
     <section className="bench-scroll min-h-0 overflow-y-auto bg-surface/38">
-      <div className="grid gap-1 border-b border-border px-5 py-4">
-        <div className="font-mono text-[10px] uppercase tracking-[0.1em] text-text4">
-          {script?.kind === "diagnose" ? "Failed transaction" : "Pre-sign simulation"} / {phase}
+      <div className="grid gap-3 border-b border-border px-5 py-4">
+        <div className="flex items-center justify-between gap-4">
+          <div className="font-mono text-[10px] uppercase tracking-[0.1em] text-text4">
+            {script?.kind === "diagnose" ? "Failed transaction" : "Pre-sign simulation"}
+          </div>
+          <div className="font-mono text-[10px] uppercase tracking-[0.1em] text-text4">phase / {phase}</div>
         </div>
-        <h1 className="font-sans text-[18px] font-normal leading-tight text-text1">{script?.subtitle ?? "Transaction report"}</h1>
+        <h1 className="max-w-[820px] font-sans text-[17px] font-normal leading-tight text-text1">
+          {script?.subtitle ?? "Transaction report"}
+        </h1>
+        <div className="hidden border-t border-border pt-3 font-mono text-[10px] uppercase tracking-[0.08em] text-text4 sm:grid sm:grid-cols-3">
+          <span>network / pharos</span>
+          <span>engine / foresight</span>
+          <span>output / verdict</span>
+        </div>
       </div>
       <motion.div variants={panelSequence} initial="initial" animate="animate" className="grid gap-0 px-5 pb-5">
         <motion.div variants={panelFade}>

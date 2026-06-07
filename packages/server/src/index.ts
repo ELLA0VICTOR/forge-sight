@@ -1,4 +1,5 @@
-﻿import cors from "cors";
+﻿import "./loadEnv.js";
+import cors from "cors";
 import express from "express";
 import pino from "pino";
 import { networkConfig } from "@foresight/engine";

@@ -21,12 +21,12 @@ export function RoundTripPanel({ roundTrip, visible }: { roundTrip?: RoundTripRe
   return (
     <section className="border-b border-border py-4">
       <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.1em] text-text4">
-        Round-trip sell test
+        Round-trip exit proof
       </div>
       <Row label={`BUY ${roundTrip.tokenSymbol}`} value="OK" />
-      <Row label="SELL AS AGENT" value={`REVERTED ${roundTrip.errorName ?? ""}`.trim()} danger />
-      <Row label="SELL AS FRESH WALLET" value="REVERTED" danger />
-      <Row label="SELL AS TOKEN OWNER" value="OK / ASYMMETRIC" />
+      <Row label="NON-OWNER EXIT" value={`REVERTED ${roundTrip.errorName ?? ""}`.trim()} danger />
+      <Row label="SECOND WALLET EXIT" value="REVERTED" danger />
+      <Row label="TOKEN OWNER EXIT" value="OK / ASYMMETRIC" />
     </section>
   );
 }

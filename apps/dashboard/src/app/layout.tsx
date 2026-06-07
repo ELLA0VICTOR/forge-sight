@@ -1,6 +1,6 @@
 ﻿import type { Metadata } from "next";
 import Script from "next/script";
-import { Cormorant_Garamond, IBM_Plex_Mono, Inter } from "next/font/google";
+import { Cormorant_Garamond, IBM_Plex_Mono, Inter, VT323 } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -21,6 +21,13 @@ const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-mono",
+  display: "swap",
+});
+
+const vt323 = VT323({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-vt323",
   display: "swap",
 });
 
@@ -71,7 +78,7 @@ const extensionErrorGuard = `
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${cormorant.variable} ${plexMono.variable}`}>
+      <body className={`${inter.variable} ${cormorant.variable} ${plexMono.variable} ${vt323.variable}`}>
         <Script id="extension-error-guard" strategy="beforeInteractive">
           {extensionErrorGuard}
         </Script>
