@@ -306,6 +306,8 @@ Build Command: corepack pnpm build
 Output Directory: .next
 ```
 
+The dashboard build script compiles `@foresight/engine` first so clean Vercel builds can resolve the workspace package types.
+
 Environment variables to add in Vercel:
 
 ```env
