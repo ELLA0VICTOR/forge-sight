@@ -303,7 +303,7 @@ export function LandingPage() {
           </div>
           <Link
             href="/try"
-            className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-button bg-button px-5 py-3 font-sans text-base font-normal leading-5 tracking-[-0.025em] text-buttonText hover:opacity-90 min-[430px]:w-fit sm:min-h-12 sm:px-6 sm:text-lg sm:leading-[1.375rem]"
+            className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-button bg-button px-5 py-3 font-sans text-base font-normal leading-5 tracking-[-0.025em] text-buttonText hover:opacity-90 min-[430px]:w-fit"
           >
             Audit now
             <RiArrowRightUpLine className="size-4" />
