@@ -1,25 +1,62 @@
+"use client";
+
 import Link from "next/link";
+import { useState, type CSSProperties } from "react";
 import {
   RiArrowRightUpLine,
   RiCheckboxCircleLine,
   RiFileList3Line,
   RiGitBranchLine,
+  RiMoonLine,
   RiShieldFlashLine,
+  RiSunLine,
 } from "react-icons/ri";
 import { BrandMark } from "../icons/BrandMark";
 import { FallingActionStage } from "./FallingActionStage";
 
-function LandingNav() {
+const lightThemeVars = {
+  "--bg": "#f7f5f9",
+  "--bg-deep": "#ffffff",
+  "--surface": "#f0edf4",
+  "--surface-2": "#e8e4ed",
+  "--surface-3": "#ded9e6",
+  "--border": "#d7d1df",
+  "--border-2": "#bfb6cd",
+  "--text-1": "#17131d",
+  "--text-2": "#4f485a",
+  "--text-3": "#766f80",
+  "--text-4": "#9a92a6",
+  "--button": "#17131d",
+  "--button-text": "#ffffff",
+} as CSSProperties;
+
+function LandingNav({
+  theme,
+  onThemeToggle,
+}: {
+  theme: "dark" | "light";
+  onThemeToggle: () => void;
+}) {
   return (
     <header className="relative z-10 mx-auto flex h-[86px] w-full max-w-[1536px] items-center justify-between px-5 sm:h-[104px] sm:px-6 md:px-10">
       <BrandMark size={96} />
-      <Link
-        href="/try"
-        className="inline-flex h-9 items-center gap-2 rounded-[10px] bg-button px-3 font-sans text-[13px] font-medium text-buttonText hover:opacity-90 sm:h-10 sm:rounded-[13px] sm:px-4 sm:text-[14px]"
-      >
-        Try now
-        <RiArrowRightUpLine className="size-4" />
-      </Link>
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={onThemeToggle}
+          className="grid size-9 place-items-center rounded-[10px] border border-border text-text3 hover:border-border2 hover:text-text1 sm:size-10 sm:rounded-[13px]"
+          aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+        >
+          {theme === "dark" ? <RiMoonLine className="size-4" /> : <RiSunLine className="size-4" />}
+        </button>
+        <Link
+          href="/try"
+          className="inline-flex h-9 items-center gap-2 rounded-[10px] bg-button px-3 font-sans text-[13px] font-medium text-buttonText hover:opacity-90 sm:h-10 sm:rounded-[13px] sm:px-4 sm:text-[14px]"
+        >
+          Try now
+          <RiArrowRightUpLine className="size-4" />
+        </Link>
+      </div>
     </header>
   );
 }
@@ -270,9 +307,11 @@ function LandingFooter() {
   );
 }
 export function LandingPage() {
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+
   return (
-    <main className="v12-shell h-screen overflow-y-auto text-text1">
-      <LandingNav />
+    <main className="v12-shell h-screen overflow-y-auto text-text1" style={theme === "light" ? lightThemeVars : undefined}>
+      <LandingNav theme={theme} onThemeToggle={() => setTheme((current) => (current === "dark" ? "light" : "dark"))} />
       <section className="relative z-10 mx-auto max-w-[1536px] px-5 pb-14 pt-6 text-center sm:px-6 sm:pb-16 sm:pt-8 md:px-10">
         <h1 className="mx-auto max-w-[920px] text-balance text-center font-display text-3xl font-light leading-9 tracking-[-0.05rem] text-text1 sm:text-[2.25rem] sm:leading-10">
           Pre-flight security for autonomous agents.
