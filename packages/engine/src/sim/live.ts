@@ -189,8 +189,9 @@ function decodeRevert(
   return { errorName: "Reverted" };
 }
 
-function makeCodeFinding(to: Address, hasCode: boolean): Finding[] {
+function makeCodeFinding(to: Address, data: Hex, hasCode: boolean): Finding[] {
   if (hasCode) return [];
+  if (data === "0x") return [];
 
   return [
     {
@@ -335,6 +336,14 @@ async function probeLiveRoundTrip(input: {
   }
 }
 
+function nativeValueAtRiskPct(value: bigint, nativeBalance: bigint): number {
+  if (value <= 0n) return 0;
+  if (nativeBalance <= 0n) return 100;
+  if (value >= nativeBalance) return 100;
+
+  return Number((value * 10_000n) / nativeBalance) / 100;
+}
+
 export async function simulateLive(
   request: TxRequest,
   options: { onTelemetry?: LiveTelemetrySink } = {},
@@ -348,10 +357,11 @@ export async function simulateLive(
 
   telemetry.push("INTERCEPT", "info", "transaction intercepted before signing", options.onTelemetry);
 
-  const [chainId, blockNumber, code] = await Promise.all([
+  const [chainId, blockNumber, code, nativeBalance] = await Promise.all([
     client.getChainId(),
     client.getBlockNumber(),
     client.getCode({ address: request.to }),
+    client.getBalance({ address: request.from }),
   ]);
   const forkBlock = Number(blockNumber);
   const hasCode = Boolean(code && code !== "0x");
@@ -423,10 +433,11 @@ export async function simulateLive(
     forkBlock,
     ...(roundTrip ? { roundTrip } : {}),
     ...(errorName ? { errorName } : {}),
-    valueAtRiskPct: value > 0n ? 100 : 0,
+    valueAtRiskPct: nativeValueAtRiskPct(value, nativeBalance),
+    hasCode,
   });
   const findings = [
-    ...makeCodeFinding(request.to, hasCode),
+    ...makeCodeFinding(request.to, request.data, hasCode),
     ...risk.findings,
     ...makeLiveInfoFindings({
       blockNumber,

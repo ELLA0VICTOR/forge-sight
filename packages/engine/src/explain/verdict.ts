@@ -4,7 +4,7 @@ function headlineFor(decision: VerdictDecision, findings: Finding[]): string {
   const top = findings[0];
   if (decision === "DO_NOT_SIGN") return top?.title ?? "Unsafe transaction";
   if (decision === "REVIEW") return top?.title ?? "Review before signing";
-  return "Standard swap - safe to sign";
+  return "Safe to sign";
 }
 
 function paragraphFor(input: {
@@ -19,7 +19,19 @@ function paragraphFor(input: {
   }
 
   if (input.decision === "SIGN") {
-    return `This is a standard swap on SimpleRouter, a verified contract. You will spend ${bySymbol.get("USDC") ?? "-100"} USDC and receive ${bySymbol.get("WPHRS")?.replace("+", "") ?? "99.5"} WPHRS, with the token allowance scoped to the exact amount. No dangerous state changes were detected. Safe to sign.`;
+    const nativeDelta = input.deltas.find((delta) => delta.token === "native" && delta.delta.startsWith("-"));
+    const usdcDelta = bySymbol.get("USDC");
+    const wphrsDelta = bySymbol.get("WPHRS");
+
+    if (usdcDelta && wphrsDelta) {
+      return `This is a standard swap on SimpleRouter, a verified contract. You will spend ${usdcDelta} USDC and receive ${wphrsDelta.replace("+", "")} WPHRS, with the token allowance scoped to the exact amount. No dangerous state changes were detected. Safe to sign.`;
+    }
+
+    if (nativeDelta) {
+      return `This is a plain ${nativeDelta.symbol} transfer that completed under live pre-flight simulation. No contract calldata, revert, honeypot, or high-risk finding was detected. Safe to sign.`;
+    }
+
+    return "The transaction completed under live pre-flight simulation and no high-risk findings were detected. Safe to sign.";
   }
 
   const top = input.findings[0];

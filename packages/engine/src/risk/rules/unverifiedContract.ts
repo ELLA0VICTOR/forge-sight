@@ -1,7 +1,8 @@
 ﻿import type { DecodedCall, Finding } from "../../types.js";
 
-export function unverifiedContractRule(decoded: DecodedCall): Finding[] {
+export function unverifiedContractRule(decoded: DecodedCall, options: { hasCode?: boolean } = {}): Finding[] {
   if (decoded.verified) return [];
+  if (options.hasCode === false) return [];
 
   return [
     {

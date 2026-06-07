@@ -598,8 +598,8 @@ summary {
 
 @media (max-width: 920px) {
   .fall-stage {
-    min-height: 690px;
-    height: 780px;
+    min-height: 660px;
+    height: 74vh;
   }
 
   .fall-main-button {
@@ -634,17 +634,64 @@ summary {
 
 @media (max-width: 560px) {
   .fall-stage {
-    min-height: 640px;
+    min-height: 560px;
+    height: 620px;
+    border-radius: 18px;
   }
 
   .fall-chip {
+    min-height: 44px;
+    min-width: 154px;
+    padding: 0 16px;
     font-size: 15px;
   }
 
   .fall-chip--contract,
   .fall-chip--calldata,
-  .fall-chip--decode {
+  .fall-chip--decode,
+  .fall-chip--trace {
     display: none;
+  }
+
+  .fall-main-button {
+    top: 34%;
+    min-width: 206px;
+    min-height: 48px;
+    border-radius: 11px;
+    font-size: 16px;
+  }
+
+  .fall-chip--approval {
+    left: 7%;
+    bottom: 168px;
+  }
+
+  .fall-chip--simulation {
+    left: 8%;
+    bottom: 96px;
+  }
+
+  .fall-chip--moon {
+    right: 7%;
+    bottom: 170px;
+  }
+
+  .fall-chip--send {
+    right: 8%;
+    bottom: 102px;
+  }
+
+  .fall-chip--exit {
+    right: 9%;
+    bottom: 34px;
+  }
+
+  .fall-floor {
+    height: 104px;
+  }
+
+  .fall-floor::before {
+    bottom: 74px;
   }
 }
 
@@ -747,15 +794,64 @@ summary {
 
 @media (max-width: 760px) {
   .landing-footer {
-    min-height: 460px;
+    min-height: 430px;
   }
 
   .landing-footer-links {
+    max-width: none;
     margin-left: 0;
+    font-size: 15px;
+    line-height: 1.55;
   }
 
   .footer-mega-mark {
-    bottom: -98px;
-    width: 142vw;
+    bottom: -72px;
+    left: -18vw;
+    width: 154vw;
+    opacity: 0.86;
+  }
+
+  .footer-spark--left {
+    left: 18%;
+    top: 180px;
+    transform: rotate(42deg) scale(0.48);
+  }
+
+  .footer-spark--middle {
+    left: 48%;
+    bottom: 112px;
+  }
+
+  .footer-spark--right {
+    right: 8%;
+    bottom: 130px;
+    transform: rotate(42deg) scale(0.44);
+  }
+}
+
+@media (max-width: 420px) {
+  .fall-stage {
+    min-height: 520px;
+    height: 560px;
+  }
+
+  .fall-chip {
+    min-width: 140px;
+    font-size: 13px;
+  }
+
+  .fall-chip--approval,
+  .fall-chip--simulation {
+    left: 5%;
+  }
+
+  .fall-chip--moon,
+  .fall-chip--send,
+  .fall-chip--exit {
+    right: 5%;
+  }
+
+  .fall-chip--exit {
+    display: none;
   }
 }

@@ -395,12 +395,16 @@ function statusLine(label: string, value: string, color: keyof typeof ansi = "cy
 
 function printSkillReport(report: SimReport, input: { mode: SimMode; label: string }) {
   const decisionColor = colorForDecision(report.verdict.decision);
+  const targetLabel =
+    report.tx.data === "0x"
+      ? `${report.network.nativeCurrency} transfer`
+      : `${report.decoded.contractName}.${report.decoded.functionName}`;
 
   printSkillBanner();
   statusLine("Skill loaded", input.label);
   statusLine("Mode", `${input.mode} Pharos RPC`, input.mode === "live" ? "green" : "amber");
   statusLine("Network", `${report.network.name} / ${report.network.chainId}`);
-  statusLine("Target", `${report.decoded.contractName}.${report.decoded.functionName}`);
+  statusLine("Target", targetLabel);
   console.log("");
   console.log(`${paint("VERDICT", "bold")}  ${paint(report.verdict.decision, decisionColor)}`);
   console.log(`${paint("RISK", "bold")}     ${paint(`${report.verdict.score} / ${report.verdict.band}`, decisionColor)}`);

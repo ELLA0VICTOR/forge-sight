@@ -53,6 +53,7 @@ export function runRiskRules(context: {
   valueAtRiskPct?: number;
   preferredScore?: number;
   errorName?: string;
+  hasCode?: boolean;
 }): {
   findings: Finding[];
   score: number;
@@ -62,7 +63,10 @@ export function runRiskRules(context: {
   const findings = [
     ...honeypotRule(context.roundTrip),
     ...unlimitedApprovalRule(context.decoded),
-    ...unverifiedContractRule(context.decoded),
+    ...unverifiedContractRule(
+      context.decoded,
+      typeof context.hasCode === "boolean" ? { hasCode: context.hasCode } : {},
+    ),
     ...hiddenStateWriteRule(context.stateChanges),
     ...predictedRevertRule(context.success, context.errorName),
     ...valueDisproportionRule({

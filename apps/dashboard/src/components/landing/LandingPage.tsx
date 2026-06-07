@@ -11,11 +11,11 @@ import { FallingActionStage } from "./FallingActionStage";
 
 function LandingNav() {
   return (
-    <header className="relative z-10 mx-auto flex h-[104px] w-full max-w-[1536px] items-center justify-between px-6 md:px-10">
-      <BrandMark size={110} />
+    <header className="relative z-10 mx-auto flex h-[86px] w-full max-w-[1536px] items-center justify-between px-5 sm:h-[104px] sm:px-6 md:px-10">
+      <BrandMark size={96} />
       <Link
         href="/try"
-        className="inline-flex h-10 items-center gap-2 rounded-[13px] bg-button px-4 font-sans text-[14px] font-medium text-buttonText hover:opacity-90"
+        className="inline-flex h-9 items-center gap-2 rounded-[10px] bg-button px-3 font-sans text-[13px] font-medium text-buttonText hover:opacity-90 sm:h-10 sm:rounded-[13px] sm:px-4 sm:text-[14px]"
       >
         Try now
         <RiArrowRightUpLine className="size-4" />
@@ -54,7 +54,7 @@ function FindingPreview() {
           className="mb-3.5 whitespace-nowrap leading-none text-teal"
           style={{
             fontFamily: "var(--font-vt323), monospace",
-            fontSize: "clamp(44px, 6.5vw, 76px)",
+            fontSize: "clamp(32px, 11vw, 76px)",
             letterSpacing: "0.04em",
           }}
         >
@@ -227,19 +227,35 @@ function VerdictShowcase() {
   );
 }
 function LandingFooter() {
+  const linkClass = "w-fit text-text2 transition-colors hover:text-text1";
+
   return (
     <footer className="landing-footer relative z-10 overflow-hidden border-t border-border">
       <div className="landing-footer-links grid grid-cols-1 gap-x-10 gap-y-4 px-6 pt-12 font-sans text-[17px] leading-[1.65] text-text2 sm:grid-cols-[1fr_0.72fr_0.9fr] md:px-10">
         <div className="grid content-start gap-1">
-          <span>Documentation</span>
-          <span>Skill README</span>
-          <span>Usage guide</span>
-          <span>Pharos Agent Center</span>
+          <Link href="/try" className={linkClass}>
+            Documentation
+          </Link>
+          <Link href="/try#cli" className={linkClass}>
+            CLI checks
+          </Link>
+          <Link href="/try#mcp" className={linkClass}>
+            MCP setup
+          </Link>
+          <a href="https://www.pharos.xyz/agent-center" target="_blank" rel="noreferrer" className={linkClass}>
+            Pharos Agent Center
+          </a>
         </div>
         <div className="grid content-start gap-1">
-          <span>GitHub</span>
-          <span>Discord</span>
-          <span>Demo</span>
+          <a href="https://github.com/ELLA0VICTOR/foresight" target="_blank" rel="noreferrer" className={linkClass}>
+            GitHub
+          </a>
+          <Link href="/demo?scenario=honeypot" className={linkClass}>
+            Live demo
+          </Link>
+          <a href="https://discord.com/invite/pharos" target="_blank" rel="noreferrer" className={linkClass}>
+            Pharos Discord
+          </a>
         </div>
         <div className="content-start text-left">
           <span>Foresight {"\u00a9"} 2026</span>
@@ -257,7 +273,7 @@ export function LandingPage() {
   return (
     <main className="v12-shell h-screen overflow-y-auto text-text1">
       <LandingNav />
-      <section className="relative z-10 mx-auto max-w-[1536px] px-6 pb-16 pt-8 text-center md:px-10">
+      <section className="relative z-10 mx-auto max-w-[1536px] px-5 pb-14 pt-6 text-center sm:px-6 sm:pb-16 sm:pt-8 md:px-10">
         <h1 className="mx-auto max-w-[920px] text-balance text-center font-display text-3xl font-light leading-9 tracking-[-0.05rem] text-text1 sm:text-[2.25rem] sm:leading-10">
           Pre-flight security for autonomous agents.
           <br />
@@ -272,8 +288,8 @@ export function LandingPage() {
           </span>
           before value moves.
         </p>
-        <div className="mt-8 flex flex-row items-center justify-center gap-2 max-[400px]:w-full max-[400px]:flex-col">
-          <div className="relative inline-block w-fit select-none max-[400px]:w-full">
+        <div className="mx-auto mt-8 flex w-full max-w-[560px] flex-col items-stretch justify-center gap-2 min-[430px]:flex-row min-[430px]:items-center">
+          <div className="relative inline-block w-full select-none min-[430px]:w-fit">
             <button
               type="button"
               disabled
@@ -287,20 +303,20 @@ export function LandingPage() {
           </div>
           <Link
             href="/try"
-            className="flex min-h-11 w-fit items-center justify-center gap-2 rounded-lg border border-button bg-button px-5 py-3 font-sans text-base font-normal leading-5 tracking-[-0.025em] text-buttonText hover:opacity-90 max-[400px]:w-full"
+            className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-button bg-button px-5 py-3 font-sans text-base font-normal leading-5 tracking-[-0.025em] text-buttonText hover:opacity-90 min-[430px]:w-fit sm:min-h-12 sm:px-6 sm:text-lg sm:leading-[1.375rem]"
           >
-            Try now
+            Audit now
             <RiArrowRightUpLine className="size-4" />
           </Link>
         </div>
         <FindingPreview />
       </section>
 
-      <section className="relative z-10 mx-auto -mt-8 max-w-[1536px] px-6 pb-24 pt-4 md:px-10">
+      <section className="relative z-10 mx-auto max-w-[1536px] px-5 pb-20 pt-2 sm:px-6 sm:pb-24 md:-mt-8 md:px-10 md:pt-4">
         <p className="mx-auto max-w-[920px] text-center font-sans text-[clamp(22px,2.35vw,36px)] font-light leading-[1.18] tracking-[-0.035em] text-text1">
           Built for the moment before an agent signs: approvals, swaps, unknown contracts, and failed transaction autopsies.
         </p>
-        <div className="mt-16 grid gap-6">
+        <div className="mt-10 grid gap-4 sm:mt-16 sm:gap-6">
           <ScopeShowcase />
           <ReviewShowcase />
           <VerdictShowcase />
